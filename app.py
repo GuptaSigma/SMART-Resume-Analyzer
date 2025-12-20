@@ -350,4 +350,7 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Debug mode should be controlled via environment variable
+    # Never enable debug=True in production as it poses security risks
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() in ('true', '1', 't')
+    app.run(debug=debug_mode)
