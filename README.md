@@ -3,9 +3,8 @@ title: SMART Resume Analyzer
 emoji: 📄
 colorFrom: blue
 colorTo: green
-sdk: gradio
-sdk_version: 4.0.0
-app_file: main.py
+sdk: docker
+app_port: 7860
 pinned: false
 ---
 
