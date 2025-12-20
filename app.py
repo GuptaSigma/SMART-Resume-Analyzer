@@ -16,6 +16,8 @@ app = Flask(__name__, template_folder='templates', static_folder='static')
 
 # Configuration
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+if app.config['SECRET_KEY'] == 'dev-secret-key-change-in-production':
+    logger.warning("WARNING: Using default SECRET_KEY. Set SECRET_KEY environment variable in production!")
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///resume_analyzer.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
@@ -137,6 +139,7 @@ def analyze_resumes():
                     ai_features=ai_result.get('features', {})
                 )
                 db.session.add(candidate)
+                db.session.flush()  # Flush to get candidate.id before commit
                 
                 # Prepare candidate data for template
                 candidate_info = {
@@ -223,8 +226,8 @@ def send_email():
         success = email_service.send_email(email, name, email_type)
         
         if success:
-            # Update candidate record
-            candidate = Candidate.query.filter_by(email=email, name=name).first()
+            # Update candidate record - use the most recent one if multiple exist
+            candidate = Candidate.query.filter_by(email=email, name=name).order_by(Candidate.created_at.desc()).first()
             if candidate:
                 candidate.email_sent = True
                 candidate.sent_on = datetime.utcnow()
@@ -257,8 +260,8 @@ def send_all_rejections():
                 success = email_service.send_email(email, name, 'rejection')
                 if success:
                     sent_count += 1
-                    # Update candidate record
-                    candidate = Candidate.query.filter_by(email=email, name=name).first()
+                    # Update candidate record - use the most recent one if multiple exist
+                    candidate = Candidate.query.filter_by(email=email, name=name).order_by(Candidate.created_at.desc()).first()
                     if candidate:
                         candidate.email_sent = True
                         candidate.sent_on = datetime.utcnow()
@@ -294,8 +297,8 @@ def send_all_congratulations():
                 success = email_service.send_email(email, name, 'congratulations')
                 if success:
                     sent_count += 1
-                    # Update candidate record
-                    candidate = Candidate.query.filter_by(email=email, name=name).first()
+                    # Update candidate record - use the most recent one if multiple exist
+                    candidate = Candidate.query.filter_by(email=email, name=name).order_by(Candidate.created_at.desc()).first()
                     if candidate:
                         candidate.email_sent = True
                         candidate.sent_on = datetime.utcnow()
