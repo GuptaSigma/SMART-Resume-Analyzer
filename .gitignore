@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.sqlite
+*.sqlite3
+venv/
+env/
+.env
+*.log
+.DS_Store
+resume_analyzer.db
