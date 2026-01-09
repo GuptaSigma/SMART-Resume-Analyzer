@@ -15,6 +15,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.enums import TA_CENTER
+from sqlalchemy import func
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -334,12 +335,18 @@ def ai_check(filename):
             flash('Candidate not found', 'warning')
             return redirect(url_for('index'))
         
-        return render_template('ai_check.html',
-                             candidate=candidate,
-                             ai_percentage=candidate.ai_percentage,
-                             ai_confidence=candidate.ai_confidence,
-                             ai_features=candidate.ai_features or {},
-                             is_ai_generated=candidate.is_ai_generated)
+        # Create analysis object matching template expectations
+        analysis = {
+            'candidate_name': candidate.name,
+            'resume_filename': candidate.resume_filename,
+            'ai_percentage': candidate.ai_percentage or 0,
+            'human_percentage': 100 - (candidate.ai_percentage or 0),
+            'ai_confidence': candidate.ai_confidence or 0,
+            'is_ai_generated': candidate.is_ai_generated,
+            'features': candidate.ai_features or {}
+        }
+        
+        return render_template('ai_check.html', analysis=analysis)
         
     except Exception as e:
         logger.error(f"Error in ai_check: {e}")
@@ -350,8 +357,14 @@ def ai_check(filename):
 def download_report(company_name):
     """Generate and download a PDF report for the analysis results"""
     try:
-        # Get the latest analysis result for this company
-        analysis_result = AnalysisResult.query.filter_by(company_name=company_name).order_by(AnalysisResult.created_at.desc()).first()
+        if not company_name:
+            flash('Company name is required', 'warning')
+            return redirect(url_for('index'))
+        
+        # Get the latest analysis result for this company (case-insensitive)
+        analysis_result = AnalysisResult.query.filter(
+            func.lower(AnalysisResult.company_name) == func.lower(company_name)
+        ).order_by(AnalysisResult.created_at.desc()).first()
         
         if not analysis_result:
             flash('No analysis found for this company', 'warning')
@@ -545,8 +558,14 @@ def download_report(company_name):
 def download_all_selected(company_name):
     """Download CSV file with all shortlisted candidates"""
     try:
-        # Get the latest analysis result for this company
-        analysis_result = AnalysisResult.query.filter_by(company_name=company_name).order_by(AnalysisResult.created_at.desc()).first()
+        if not company_name:
+            flash('Company name is required', 'warning')
+            return redirect(url_for('index'))
+        
+        # Get the latest analysis result for this company (case-insensitive)
+        analysis_result = AnalysisResult.query.filter(
+            func.lower(AnalysisResult.company_name) == func.lower(company_name)
+        ).order_by(AnalysisResult.created_at.desc()).first()
         
         if not analysis_result:
             flash('No analysis found for this company', 'warning')
