@@ -339,9 +339,9 @@ def ai_check(filename):
         analysis = {
             'candidate_name': candidate.name,
             'resume_filename': candidate.resume_filename,
-            'ai_percentage': candidate.ai_percentage,
-            'human_percentage': 100 - candidate.ai_percentage,
-            'ai_confidence': candidate.ai_confidence,
+            'ai_percentage': candidate.ai_percentage or 0,
+            'human_percentage': 100 - (candidate.ai_percentage or 0),
+            'ai_confidence': candidate.ai_confidence or 0,
             'is_ai_generated': candidate.is_ai_generated,
             'features': candidate.ai_features or {}
         }
@@ -357,6 +357,10 @@ def ai_check(filename):
 def download_report(company_name):
     """Generate and download a PDF report for the analysis results"""
     try:
+        if not company_name:
+            flash('Company name is required', 'warning')
+            return redirect(url_for('index'))
+        
         # Get the latest analysis result for this company (case-insensitive)
         analysis_result = AnalysisResult.query.filter(
             func.lower(AnalysisResult.company_name) == func.lower(company_name)
@@ -554,6 +558,10 @@ def download_report(company_name):
 def download_all_selected(company_name):
     """Download CSV file with all shortlisted candidates"""
     try:
+        if not company_name:
+            flash('Company name is required', 'warning')
+            return redirect(url_for('index'))
+        
         # Get the latest analysis result for this company (case-insensitive)
         analysis_result = AnalysisResult.query.filter(
             func.lower(AnalysisResult.company_name) == func.lower(company_name)
