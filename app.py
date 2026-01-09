@@ -345,12 +345,7 @@ def ai_check(filename):
             'features': candidate.ai_features or {}
         }
         
-        return render_template('ai_check.html',
-                             analysis=analysis,
-                             ai_percentage=candidate.ai_percentage,
-                             ai_confidence=candidate.ai_confidence,
-                             ai_features=candidate.ai_features or {},
-                             is_ai_generated=candidate.is_ai_generated)
+        return render_template('ai_check.html', analysis=analysis)
         
     except Exception as e:
         logger.error(f"Error in ai_check: {e}")
