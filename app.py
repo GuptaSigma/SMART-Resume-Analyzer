@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, make_response
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, make_response, abort
 import os
 from extensions import db
 from models import AnalysisResult, Candidate
@@ -334,12 +334,17 @@ def ai_check(filename):
             flash('Candidate not found', 'warning')
             return redirect(url_for('index'))
         
-        return render_template('ai_check.html',
-                             candidate=candidate,
-                             ai_percentage=candidate.ai_percentage,
-                             ai_confidence=candidate.ai_confidence,
-                             ai_features=candidate.ai_features or {},
-                             is_ai_generated=candidate.is_ai_generated)
+        # Create analysis object matching template expectations
+        analysis = {
+            'candidate_name': candidate.name,
+            'resume_filename': candidate.resume_filename,
+            'human_percentage': 100 - (candidate.ai_percentage or 0),
+            'ai_percentage': candidate.ai_percentage or 0,
+            'ai_confidence': candidate.ai_confidence or 0,
+            'features': candidate.ai_features or {}
+        }
+        
+        return render_template('ai_check.html', analysis=analysis)
         
     except Exception as e:
         logger.error(f"Error in ai_check: {e}")
@@ -354,8 +359,8 @@ def download_report(company_name):
         analysis_result = AnalysisResult.query.filter_by(company_name=company_name).order_by(AnalysisResult.created_at.desc()).first()
         
         if not analysis_result:
-            flash('No analysis found for this company', 'warning')
-            return redirect(url_for('index'))
+            logger.warning(f"No analysis found for company: {company_name}")
+            abort(404, description='No analysis found for this company')
         
         # Get all candidates for this analysis
         candidates = Candidate.query.filter_by(analysis_id=analysis_result.id).all()
@@ -538,8 +543,7 @@ def download_report(company_name):
         
     except Exception as e:
         logger.error(f"Error generating PDF report: {e}")
-        flash(f'An error occurred while generating the report: {str(e)}', 'danger')
-        return redirect(url_for('index'))
+        abort(500, description=f'An error occurred while generating the report: {str(e)}')
 
 @app.route('/download_all_selected/<company_name>')
 def download_all_selected(company_name):
@@ -549,8 +553,8 @@ def download_all_selected(company_name):
         analysis_result = AnalysisResult.query.filter_by(company_name=company_name).order_by(AnalysisResult.created_at.desc()).first()
         
         if not analysis_result:
-            flash('No analysis found for this company', 'warning')
-            return redirect(url_for('index'))
+            logger.warning(f"No analysis found for company: {company_name}")
+            abort(404, description='No analysis found for this company')
         
         # Get all shortlisted candidates
         shortlisted_candidates = Candidate.query.filter_by(
@@ -559,8 +563,8 @@ def download_all_selected(company_name):
         ).order_by(Candidate.match_score.desc()).all()
         
         if not shortlisted_candidates:
-            flash('No shortlisted candidates found', 'warning')
-            return redirect(url_for('index'))
+            logger.warning(f"No shortlisted candidates found for company: {company_name}")
+            abort(404, description='No shortlisted candidates found')
         
         # Create CSV in memory
         output = StringIO()
@@ -599,8 +603,7 @@ def download_all_selected(company_name):
         
     except Exception as e:
         logger.error(f"Error generating CSV: {e}")
-        flash(f'An error occurred while generating the CSV: {str(e)}', 'danger')
-        return redirect(url_for('index'))
+        abort(500, description=f'An error occurred while generating the CSV: {str(e)}')
 
 # Error handlers
 @app.errorhandler(404)
