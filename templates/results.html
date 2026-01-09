@@ -239,7 +239,7 @@ body {
                 <p class="lead mb-0">{{ company_name }} | Analyzed by {{ hr_name }}</p>
             </div>
             <div class="d-flex flex-column gap-2">
-                {% if shortlisted or not_selected %}
+                {% if shortlisted_candidates or not_selected_candidates %}
                 <a href="{{ url_for('download_report', company_name=company_name) }}" class="btn btn-success btn-lg">
                     <i class="fas fa-download me-2"></i>Download Report
                 </a>
@@ -262,21 +262,21 @@ body {
         <div class="col-md-3 mb-3">
             <div class="stats-card">
                 <i class="fas fa-star fa-2x text-success mb-2"></i>
-                <h3>{{ shortlisted|length }}</h3>
+                <h3>{{ shortlisted_candidates|length }}</h3>
                 <p class="mb-0">Shortlisted</p>
             </div>
         </div>
         <div class="col-md-3 mb-3">
             <div class="stats-card">
                 <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
-                <h3>{{ not_selected|length }}</h3>
+                <h3>{{ not_selected_candidates|length }}</h3>
                 <p class="mb-0">Not Selected</p>
             </div>
         </div>
         <div class="col-md-3 mb-3">
             <div class="stats-card">
                 <i class="fas fa-robot fa-2x text-warning mb-2"></i>
-                <h3>{{ (shortlisted + not_selected)|selectattr('is_ai_generated')|list|length }}</h3>
+                <h3>{{ (shortlisted_candidates + not_selected_candidates)|selectattr('is_ai_generated')|list|length }}</h3>
                 <p class="mb-0">AI Detected</p>
             </div>
         </div>
@@ -291,18 +291,18 @@ body {
         </p>
     </div>
 
-    {% if shortlisted %}
+    {% if shortlisted_candidates %}
     <div class="mb-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="text-success mb-0">
-                <i class="fas fa-check-circle me-2"></i>Shortlisted Candidates ({{ shortlisted|length }})
+                <i class="fas fa-check-circle me-2"></i>Shortlisted Candidates ({{ shortlisted_candidates|length }})
             </h2>
             <button class="btn btn-outline-success" onclick="sendAllCongratulations()">
                 <i class="fas fa-envelope me-2"></i>All Congratulations
             </button>
         </div>
         <div class="row">
-            {% for candidate in shortlisted %}
+            {% for candidate in shortlisted_candidates %}
             <div class="col-lg-6 mb-4">
                 <div class="card candidate-card h-100 shortlisted-card">
                     <div class="card-header d-flex justify-content-between align-items-start">
@@ -492,18 +492,18 @@ body {
     </div>
     {% endif %}
 
-    {% if not_selected %}
+    {% if not_selected_candidates %}
     <div class="mb-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="text-danger mb-0">
-                <i class="fas fa-times-circle me-2"></i>Not Selected Candidates ({{ not_selected|length }})
+                <i class="fas fa-times-circle me-2"></i>Not Selected Candidates ({{ not_selected_candidates|length }})
             </h2>
             <button class="btn btn-outline-danger" onclick="sendAllRejections()">
                 <i class="fas fa-envelope me-2"></i>All Rejection
             </button>
         </div>
         <div class="row">
-            {% for candidate in not_selected %}
+            {% for candidate in not_selected_candidates %}
             <div class="col-lg-6 mb-4">
                 <div class="card candidate-card h-100 not-selected-card">
                     <div class="card-header d-flex justify-content-between align-items-start">
