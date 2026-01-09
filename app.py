@@ -334,8 +334,19 @@ def ai_check(filename):
             flash('Candidate not found', 'warning')
             return redirect(url_for('index'))
         
+        # Create analysis dictionary with structure expected by template
+        analysis = {
+            'candidate_name': candidate.name,
+            'resume_filename': candidate.resume_filename,
+            'ai_percentage': candidate.ai_percentage,
+            'human_percentage': round(100.0 - (candidate.ai_percentage or 0), 1),
+            'ai_confidence': candidate.ai_confidence,
+            'is_ai_generated': candidate.is_ai_generated,
+            'features': candidate.ai_features or {}
+        }
+        
         return render_template('ai_check.html',
-                             candidate=candidate,
+                             analysis=analysis,
                              ai_percentage=candidate.ai_percentage,
                              ai_confidence=candidate.ai_confidence,
                              ai_features=candidate.ai_features or {},
@@ -350,8 +361,10 @@ def ai_check(filename):
 def download_report(company_name):
     """Generate and download a PDF report for the analysis results"""
     try:
-        # Get the latest analysis result for this company
-        analysis_result = AnalysisResult.query.filter_by(company_name=company_name).order_by(AnalysisResult.created_at.desc()).first()
+        # Get the latest analysis result for this company (case-insensitive)
+        analysis_result = AnalysisResult.query.filter(
+            AnalysisResult.company_name.ilike(company_name)
+        ).order_by(AnalysisResult.created_at.desc()).first()
         
         if not analysis_result:
             flash('No analysis found for this company', 'warning')
@@ -545,8 +558,10 @@ def download_report(company_name):
 def download_all_selected(company_name):
     """Download CSV file with all shortlisted candidates"""
     try:
-        # Get the latest analysis result for this company
-        analysis_result = AnalysisResult.query.filter_by(company_name=company_name).order_by(AnalysisResult.created_at.desc()).first()
+        # Get the latest analysis result for this company (case-insensitive)
+        analysis_result = AnalysisResult.query.filter(
+            AnalysisResult.company_name.ilike(company_name)
+        ).order_by(AnalysisResult.created_at.desc()).first()
         
         if not analysis_result:
             flash('No analysis found for this company', 'warning')
