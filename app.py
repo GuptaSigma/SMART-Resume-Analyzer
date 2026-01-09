@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, make_response
 import os
 from extensions import db
 from models import AnalysisResult, Candidate
@@ -7,6 +7,14 @@ from ai_detector import AIDetector
 from email_service import EmailService
 from datetime import datetime
 import logging
+import csv
+from io import StringIO, BytesIO
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -336,6 +344,262 @@ def ai_check(filename):
     except Exception as e:
         logger.error(f"Error in ai_check: {e}")
         flash(f'An error occurred: {str(e)}', 'danger')
+        return redirect(url_for('index'))
+
+@app.route('/download_report/<company_name>')
+def download_report(company_name):
+    """Generate and download a PDF report for the analysis results"""
+    try:
+        # Get the latest analysis result for this company
+        analysis_result = AnalysisResult.query.filter_by(company_name=company_name).order_by(AnalysisResult.created_at.desc()).first()
+        
+        if not analysis_result:
+            flash('No analysis found for this company', 'warning')
+            return redirect(url_for('index'))
+        
+        # Get all candidates for this analysis
+        candidates = Candidate.query.filter_by(analysis_id=analysis_result.id).all()
+        shortlisted = [c for c in candidates if c.is_shortlisted]
+        not_selected = [c for c in candidates if not c.is_shortlisted]
+        
+        # Create PDF in memory
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72, leftMargin=72,
+                                topMargin=72, bottomMargin=18)
+        
+        # Container for the 'Flowable' objects
+        elements = []
+        
+        # Define styles
+        styles = getSampleStyleSheet()
+        title_style = ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Heading1'],
+            fontSize=24,
+            textColor=colors.HexColor('#1a5490'),
+            spaceAfter=30,
+            alignment=TA_CENTER
+        )
+        heading_style = ParagraphStyle(
+            'CustomHeading',
+            parent=styles['Heading2'],
+            fontSize=16,
+            textColor=colors.HexColor('#2c5282'),
+            spaceAfter=12,
+            spaceBefore=12
+        )
+        
+        # Add title
+        elements.append(Paragraph(f"Resume Analysis Report", title_style))
+        elements.append(Spacer(1, 12))
+        
+        # Company and HR details
+        company_data = [
+            ['Company Name:', analysis_result.company_name],
+            ['HR Name:', analysis_result.hr_name],
+            ['HR Email:', analysis_result.hr_email],
+            ['Analysis Date:', analysis_result.created_at.strftime('%Y-%m-%d %H:%M:%S')],
+        ]
+        
+        company_table = Table(company_data, colWidths=[2*inch, 4*inch])
+        company_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#e8f4f8')),
+            ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+            ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ]))
+        elements.append(company_table)
+        elements.append(Spacer(1, 20))
+        
+        # Statistics
+        elements.append(Paragraph("Summary Statistics", heading_style))
+        stats_data = [
+            ['Total Resumes Processed:', str(analysis_result.total_processed)],
+            ['Shortlisted Candidates:', str(analysis_result.shortlisted_count)],
+            ['Not Selected:', str(analysis_result.total_processed - analysis_result.shortlisted_count)],
+        ]
+        
+        stats_table = Table(stats_data, colWidths=[3*inch, 3*inch])
+        stats_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#e8f4f8')),
+            ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+            ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 0), (-1, -1), 11),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ]))
+        elements.append(stats_table)
+        elements.append(Spacer(1, 20))
+        
+        # Shortlisted Candidates
+        if shortlisted:
+            elements.append(Paragraph("Shortlisted Candidates", heading_style))
+            
+            # Header row
+            shortlisted_data = [['Name', 'Email', 'Score', 'Education', 'Experience']]
+            
+            for candidate in sorted(shortlisted, key=lambda x: x.match_score, reverse=True):
+                shortlisted_data.append([
+                    candidate.name or 'N/A',
+                    candidate.email or 'N/A',
+                    f"{candidate.match_score:.1f}%",
+                    candidate.education or 'N/A',
+                    f"{candidate.experience_years} yrs" if candidate.experience_years else 'N/A'
+                ])
+            
+            shortlisted_table = Table(shortlisted_data, colWidths=[1.5*inch, 1.8*inch, 0.8*inch, 1.3*inch, 1*inch])
+            shortlisted_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1a5490')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 10),
+                ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+                ('FONTSIZE', (0, 1), (-1, -1), 9),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+                ('TOPPADDING', (0, 0), (-1, -1), 8),
+                ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+                ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f0f8ff')]),
+            ]))
+            elements.append(shortlisted_table)
+            elements.append(Spacer(1, 20))
+        
+        # Not Selected Candidates
+        if not_selected:
+            elements.append(Paragraph("Not Selected Candidates", heading_style))
+            
+            # Header row
+            not_selected_data = [['Name', 'Email', 'Score', 'Education']]
+            
+            for candidate in sorted(not_selected, key=lambda x: x.match_score, reverse=True):
+                not_selected_data.append([
+                    candidate.name or 'N/A',
+                    candidate.email or 'N/A',
+                    f"{candidate.match_score:.1f}%",
+                    candidate.education or 'N/A'
+                ])
+            
+            not_selected_table = Table(not_selected_data, colWidths=[2*inch, 2.2*inch, 0.8*inch, 1.5*inch])
+            not_selected_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#8b0000')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 10),
+                ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+                ('FONTSIZE', (0, 1), (-1, -1), 9),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+                ('TOPPADDING', (0, 0), (-1, -1), 8),
+                ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+                ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#ffe4e1')]),
+            ]))
+            elements.append(not_selected_table)
+            elements.append(Spacer(1, 20))
+        
+        # AI Detection Summary
+        elements.append(Paragraph("AI Detection Summary", heading_style))
+        ai_generated_count = sum(1 for c in candidates if c.is_ai_generated)
+        ai_summary_data = [
+            ['Total Candidates Analyzed:', str(len(candidates))],
+            ['AI-Generated Resumes Detected:', str(ai_generated_count)],
+            ['Human-Written Resumes:', str(len(candidates) - ai_generated_count)],
+        ]
+        
+        ai_summary_table = Table(ai_summary_data, colWidths=[3*inch, 3*inch])
+        ai_summary_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#fff3cd')),
+            ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+            ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ]))
+        elements.append(ai_summary_table)
+        
+        # Build PDF
+        doc.build(elements)
+        
+        # Prepare response
+        buffer.seek(0)
+        response = make_response(buffer.getvalue())
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = f'attachment; filename=resume_analysis_{company_name}_{analysis_result.created_at.strftime("%Y%m%d")}.pdf'
+        
+        logger.info(f"Generated PDF report for company: {company_name}")
+        return response
+        
+    except Exception as e:
+        logger.error(f"Error generating PDF report: {e}")
+        flash(f'An error occurred while generating the report: {str(e)}', 'danger')
+        return redirect(url_for('index'))
+
+@app.route('/download_all_selected/<company_name>')
+def download_all_selected(company_name):
+    """Download CSV file with all shortlisted candidates"""
+    try:
+        # Get the latest analysis result for this company
+        analysis_result = AnalysisResult.query.filter_by(company_name=company_name).order_by(AnalysisResult.created_at.desc()).first()
+        
+        if not analysis_result:
+            flash('No analysis found for this company', 'warning')
+            return redirect(url_for('index'))
+        
+        # Get all shortlisted candidates
+        shortlisted_candidates = Candidate.query.filter_by(
+            analysis_id=analysis_result.id,
+            is_shortlisted=True
+        ).order_by(Candidate.match_score.desc()).all()
+        
+        if not shortlisted_candidates:
+            flash('No shortlisted candidates found', 'warning')
+            return redirect(url_for('index'))
+        
+        # Create CSV in memory
+        output = StringIO()
+        writer = csv.writer(output)
+        
+        # Write header
+        writer.writerow([
+            'Name', 'Email', 'Phone', 'Match Score (%)', 
+            'Target Role', 'Experience (Years)', 'Education', 
+            'University', 'Resume Filename', 'AI Generated'
+        ])
+        
+        # Write candidate data
+        for candidate in shortlisted_candidates:
+            writer.writerow([
+                candidate.name or 'N/A',
+                candidate.email or 'N/A',
+                candidate.phone or 'N/A',
+                f"{candidate.match_score:.2f}",
+                candidate.target_role or 'N/A',
+                candidate.experience_years if candidate.experience_years is not None else 'N/A',
+                candidate.education or 'N/A',
+                candidate.university or 'N/A',
+                candidate.resume_filename or 'N/A',
+                'Yes' if candidate.is_ai_generated else 'No'
+            ])
+        
+        # Prepare response
+        output.seek(0)
+        response = make_response(output.getvalue())
+        response.headers['Content-Type'] = 'text/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename=shortlisted_candidates_{company_name}_{analysis_result.created_at.strftime("%Y%m%d")}.csv'
+        
+        logger.info(f"Generated CSV for shortlisted candidates: {company_name}")
+        return response
+        
+    except Exception as e:
+        logger.error(f"Error generating CSV: {e}")
+        flash(f'An error occurred while generating the CSV: {str(e)}', 'danger')
         return redirect(url_for('index'))
 
 # Error handlers
