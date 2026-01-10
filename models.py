@@ -52,5 +52,21 @@ class Candidate(db.Model):
     ai_percentage = db.Column(db.Float)
     ai_confidence = db.Column(db.Float)
     ai_features = db.Column(JSONEncodedDict)
+    
+    @property
+    def candidate_name(self):
+        """Alias for name to match template expectations"""
+        return self.name
+    
+    @property
+    def human_percentage(self):
+        """Calculate human percentage from AI percentage"""
+        return 100 - (self.ai_percentage or 0)
+    
+    @property
+    def features(self):
+        """Alias for ai_features to match template expectations"""
+        return self.ai_features or {}
+    
     def __repr__(self):
         return f'<Candidate {self.name}>'
