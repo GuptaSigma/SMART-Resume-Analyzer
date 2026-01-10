@@ -325,8 +325,8 @@
             <div class="header text-center mb-4">
                 <img src="https://www.digital-science.com/wp-content/uploads/2024/02/ai-academic-writing-research-stock-image-1.jpg" alt="Profile Photo" class="profile-photo">
                 <h1><i class="fas fa-robot me-3"></i>AI Detection Analysis</h1>
-                <h3 class="text-muted">{{ analysis.candidate_name }}</h3>
-                <p class="text-muted mb-0">Resume: {{ analysis.resume_filename }}</p>
+                <h3 class="text-muted">{{ candidate.name }}</h3>
+                <p class="text-muted mb-0">Resume: {{ candidate.resume_filename }}</p>
             </div>
             
             <div class="chart-container">
@@ -334,14 +334,14 @@
                     <div class="chart-title">AI vs Human Content Detection</div>
                     <div class="bar-graph">
                         <div class="bar-container">
-                            <div class="bar human" id="humanBar" style="height: {{ analysis.human_percentage * 2 }}px;">
-                                {{ analysis.human_percentage }}%
+                            <div class="bar human" id="humanBar" style="height: {{ (100 - candidate.ai_percentage) * 2 }}px;">
+                                {{ "%.0f"|format(100 - candidate.ai_percentage) }}%
                             </div>
                             <div class="bar-label">Human</div>
                         </div>
                         <div class="bar-container">
-                            <div class="bar ai" id="aiBar" style="height: {{ analysis.ai_percentage * 2 }}px;">
-                                {{ analysis.ai_percentage }}%
+                            <div class="bar ai" id="aiBar" style="height: {{ candidate.ai_percentage * 2 }}px;">
+                                {{ "%.0f"|format(candidate.ai_percentage) }}%
                             </div>
                             <div class="bar-label">AI</div>
                         </div>
@@ -350,12 +350,12 @@
                 
                 <div class="confidence-section">
                     <div class="confidence-title">AI Confidence — How much AI is present</div>
-                    <div class="confidence-score">{{ analysis.ai_confidence }}%</div>
+                    <div class="confidence-score">{{ "%.0f"|format(candidate.ai_confidence) }}%</div>
                     <p class="mb-0">
-                        {% if analysis.ai_confidence >= 75 %}
+                        {% if candidate.ai_confidence >= 75 %}
                             <i class="fas fa-exclamation-triangle text-warning me-2"></i>
                             High confidence of AI-generated content.
-                        {% elif analysis.ai_confidence >= 40 %}
+                        {% elif candidate.ai_confidence >= 40 %}
                             <i class="fas fa-info-circle text-info me-2"></i>
                             Moderate confidence of AI-generated content.
                         {% else %}
@@ -372,47 +372,47 @@
             <div class="feature-grid">
                 <div class="feature-card">
                     <div class="feature-title">Readability Score</div>
-                    <div class="feature-value">{{ "%.1f"|format(analysis.features.readability) }}</div>
+                    <div class="feature-value">{{ "%.1f"|format(candidate.ai_features.readability) if candidate.ai_features and candidate.ai_features.readability is defined else 'N/A' }}</div>
                     <small class="text-muted">Flesch Reading Ease</small>
                 </div>
                 <div class="feature-card">
                     <div class="feature-title">AI Phrases Detected</div>
-                    <div class="feature-value">{{ analysis.features.ai_phrases }}</div>
+                    <div class="feature-value">{{ candidate.ai_features.ai_phrases if candidate.ai_features and candidate.ai_features.ai_phrases is defined else 'N/A' }}</div>
                     <small class="text-muted">Common AI expressions</small>
                 </div>
                 <div class="feature-card">
                     <div class="feature-title">Sentiment Neutrality</div>
-                    <div class="feature-value">{{ "%.2f"|format(analysis.features.sentiment_neutrality) }}</div>
+                    <div class="feature-value">{{ "%.2f"|format(candidate.ai_features.sentiment_neutrality) if candidate.ai_features and candidate.ai_features.sentiment_neutrality is defined else 'N/A' }}</div>
                     <small class="text-muted">0.0 = Emotional, 1.0 = Neutral</small>
                 </div>
                 <div class="feature-card">
                     <div class="feature-title">Burstiness Score</div>
-                    <div class="feature-value">{{ "%.2f"|format(analysis.features.burstiness) }}</div>
+                    <div class="feature-value">{{ "%.2f"|format(candidate.ai_features.burstiness) if candidate.ai_features and candidate.ai_features.burstiness is defined else 'N/A' }}</div>
                     <small class="text-muted">Sentence length variation</small>
                 </div>
                 <div class="feature-card">
                     <div class="feature-title">Perplexity Score</div>
-                    <div class="feature-value">{{ "%.2f"|format(analysis.features.perplexity) }}</div>
+                    <div class="feature-value">{{ "%.2f"|format(candidate.ai_features.perplexity) if candidate.ai_features and candidate.ai_features.perplexity is defined else 'N/A' }}</div>
                     <small class="text-muted">Language predictability</small>
                 </div>
                 <div class="feature-card">
                     <div class="feature-title">Grammar Errors</div>
-                    <div class="feature-value">{{ analysis.features.grammar_errors }}</div>
+                    <div class="feature-value">{{ candidate.ai_features.grammar_errors if candidate.ai_features and candidate.ai_features.grammar_errors is defined else 'N/A' }}</div>
                     <small class="text-muted">Detected inconsistencies</small>
                 </div>
                 <div class="feature-card">
                     <div class="feature-title">Entropy Score</div>
-                    <div class="feature-value">{{ "%.2f"|format(analysis.features.entropy_score) }}</div>
+                    <div class="feature-value">{{ "%.2f"|format(candidate.ai_features.entropy_score) if candidate.ai_features and candidate.ai_features.entropy_score is defined else 'N/A' }}</div>
                     <small class="text-muted">Character predictability</small>
                 </div>
                 <div class="feature-card">
                     <div class="feature-title">Bullet Score</div>
-                    <div class="feature-value">{{ "%.2f"|format(analysis.features.bullet_score) }}</div>
+                    <div class="feature-value">{{ "%.2f"|format(candidate.ai_features.bullet_score) if candidate.ai_features and candidate.ai_features.bullet_score is defined else 'N/A' }}</div>
                     <small class="text-muted">Bullet point usage</small>
                 </div>
                 <div class="feature-card">
                     <div class="feature-title">Stopword Ratio</div>
-                    <div class="feature-value">{{ "%.2f"|format(analysis.features.stopword_ratio) }}</div>
+                    <div class="feature-value">{{ "%.2f"|format(candidate.ai_features.stopword_ratio) if candidate.ai_features and candidate.ai_features.stopword_ratio is defined else 'N/A' }}</div>
                     <small class="text-muted">Frequency of common words</small>
                 </div>
             </div>
