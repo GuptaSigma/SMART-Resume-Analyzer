@@ -335,12 +335,7 @@ def ai_check(filename):
             return redirect(url_for('index'))
         
         # Pass as 'analysis' to match template expectations
-        return render_template('ai_check.html',
-                             analysis=candidate,
-                             ai_percentage=candidate.ai_percentage,
-                             ai_confidence=candidate.ai_confidence,
-                             ai_features=candidate.ai_features or {},
-                             is_ai_generated=candidate.is_ai_generated)
+        return render_template('ai_check.html', analysis=candidate)
         
     except Exception as e:
         logger.error(f"Error in ai_check: {e}")
