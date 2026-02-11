@@ -14,7 +14,13 @@ except ImportError:
     try:
         from main import app  # Agar tumhara main file 'main.py' hai
     except ImportError:
-        from application import app  # Ya koi aur naam hai
+        try:
+            from application import app  # Ya koi aur naam hai
+        except ImportError:
+            raise ImportError(
+                f"Could not import Flask app from nested directory: {nested_path}. "
+                "Please ensure the Flask app is defined in one of: app.py, main.py, or application.py"
+            )
 
 # Vercel needs this
 if __name__ == "__main__":

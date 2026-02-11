@@ -18,6 +18,6 @@
   "env": {
     "PYTHONUNBUFFERED": "1",
     "UPLOAD_DIR": "/tmp",
-    "DATABASE_URL": "sqlite:////tmp/resume_analyzer.db"
+    "DATABASE_URL": "sqlite:///tmp/resume_analyzer.db"
   }
 }
