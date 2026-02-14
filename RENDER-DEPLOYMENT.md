@@ -32,6 +32,10 @@ The build command automatically downloads required NLTK data:
 
 If you need additional NLTK data, add it to the build command.
 
+**Note on Grammar Checking**: The `language-tool-python` package requires Java Runtime Environment (JRE) to be installed. Since Java is not available by default on Render's free tier, grammar checking will be disabled. The application will work normally with a warning message. If you need grammar checking, you'll need to either:
+- Use a paid tier with custom Docker container that includes Java
+- Remove `language-tool-python` from `requirements.txt` to avoid the warning
+
 ### 4. Deploy
 1. Click "Create Web Service"
 2. Render will automatically deploy from your main branch
