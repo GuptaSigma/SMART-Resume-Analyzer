@@ -536,4 +536,5 @@ if __name__ == '__main__':
         logging.info("Database tables ensured on startup.")
     # Ensure uploads dir exists at runtime
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    app.run(host='0.0.0.0', port=5000, debug=debug_mode)
