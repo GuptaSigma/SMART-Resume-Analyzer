@@ -13,3 +13,5 @@ textstat==0.7.3
 scikit-learn==1.5.2
 language-tool-python==2.9.0
 gunicorn==22.0.0
+setuptools==75.6.0
+
