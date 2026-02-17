@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHire.AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <style>
+        /* Automatic Width Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+        }
+
+        /* Navbar - Full Width Automatic */
+        .navbar {
+            width: 100%;
+            padding: 1rem 0;
+            background: linear-gradient(135deg, #4da6ff 0%, #3399ff 100%) !important;
+            position: fixed;
+            z-index: 1000;
+        }
+
+        .navbar .container {
+            width: 100%;
+            max-width: calc(100% - 4rem);
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section - Automatic Width */
+        .hero-section {
+            width: 100%;
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #66b3ff 0%, #4da6ff 100%);
+            color: white;
+        }
+
+        .hero-section .container {
+            width: 100%;
+            max-width: calc(100% - 4rem);
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Main Container - Automatic Width */
+        .container.my-5 {
+            width: 100%;
+            max-width: calc(100% - 4rem);
+            margin: 2rem auto !important;
+            padding: 0 2rem;
+        }
+
+        /* Feature Icon Styling */
+        .feature-icon {
+            font-size: 2rem;
+            color: #3399ff;
+            display: inline-block;
+            padding: 1rem;
+            background: rgba(51, 153, 255, 0.1);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            line-height: 28px;
+            text-align: center;
+        }
+
+        /* Card Hover Effects */
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e3f2fd;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(51, 153, 255, 0.15);
+        }
+
+        /* File Drop Zone */
+        .file-drop-zone {
+            border: 2px dashed #66b3ff;
+            border-radius: 0.8rem;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: rgba(102, 179, 255, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-drop-zone:hover {
+            background: rgba(102, 179, 255, 0.1);
+            border-color: #4da6ff;
+        }
+
+        .file-drop-zone.dragover {
+            background: rgba(102, 179, 255, 0.15);
+            border-color: #3399ff;
+            transform: scale(1.02);
+        }
+
+        /* File List Styling */
+        #fileList {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            background: #f0f8ff;
+            border-radius: 0.5rem;
+            border: 1px solid #e1f0ff;
+            transition: all 0.2s ease;
+        }
+
+        .file-item:hover {
+            background: #e6f2ff;
+            transform: translateX(5px);
+        }
+
+        .file-item .file-name {
+            flex: 1;
+            font-weight: 500;
+            color: #2c5282;
+        }
+
+        .file-item .file-size {
+            color: #4299e1;
+            font-size: 0.875rem;
+            margin: 0 1rem;
+        }
+
+        .file-item .remove-file {
+            color: #4299e1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-item .remove-file:hover {
+            color: #3182ce;
+            transform: scale(1.2);
+        }
+
+        /* Submit Button Animation */
+        #submitBtn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #4da6ff 0%, #3399ff 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 30px;
+            font-weight: 600;
+        }
+
+        #submitBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(51, 153, 255, 0.4);
+            background: linear-gradient(135deg, #3399ff 0%, #2185ff 100%);
+        }
+
+        #submitBtn:active {
+            transform: translateY(0);
+        }
+
+        /* Buttons - Light Blue Style */
+        .btn-primary {
+            background: linear-gradient(135deg, #4da6ff 0%, #3399ff 100%) !important;
+            border: none !important;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #3399ff 0%, #2185ff 100%) !important;
+            box-shadow: 0 4px 12px rgba(51, 153, 255, 0.3);
+        }
+
+        .btn-outline-primary {
+            color: #3399ff !important;
+            border-color: #3399ff !important;
+            background: transparent;
+        }
+
+        .btn-outline-primary:hover {
+            background: #3399ff !important;
+            color: white !important;
+        }
+
+        /* Footer Styling */
+        footer {
+            width: 100%;
+            margin-top: 3rem;
+            background: linear-gradient(135deg, #4da6ff 0%, #3399ff 100%) !important;
+        }
+
+        /* Responsive Design - Automatic Adjustments */
+        @media (max-width: 768px) {
+            .navbar .container,
+            .hero-section .container,
+            .container.my-5 {
+                max-width: calc(100% - 2rem);
+                padding: 0 1rem;
+            }
+
+            .hero-section {
+                padding: 2rem 0;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .file-drop-zone {
+                padding: 2rem 1rem;
+            }
+
+            .feature-icon {
+                font-size: 1.5rem;
+                width: 50px;
+                height: 50px;
+                line-height: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar .container,
+            .hero-section .container,
+            .container.my-5 {
+                max-width: calc(100% - 1rem);
+                padding: 0 0.5rem;
+            }
+
+            .hero-section h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero-section p {
+                font-size: 0.9rem;
+            }
+
+            .btn-lg {
+                padding: 0.5rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Large screens - better spacing */
+        @media (min-width: 1400px) {
+            .navbar .container,
+            .hero-section .container,
+            .container.my-5 {
+                max-width: calc(100% - 8rem);
+                padding: 0 4rem;
+            }
+        }
+
+        /* Ultra wide screens */
+        @media (min-width: 1920px) {
+            .navbar .container,
+            .hero-section .container,
+            .container.my-5 {
+                max-width: calc(100% - 12rem);
+                padding: 0 6rem;
+            }
+        }
+
+        /* Loading Animation */
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+            border-width: 0.15em;
+        }
+
+        /* Card Header Custom Styling */
+        .card-header {
+            background: linear-gradient(135deg, #66b3ff 0%, #4da6ff 100%);
+            color: white;
+            font-weight: 600;
+            border: none;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            color: white;
+        }
+
+        /* Form Control Focus */
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #66b3ff;
+            box-shadow: 0 0 0 0.2rem rgba(102, 179, 255, 0.25);
+        }
+
+        /* Custom Scrollbar */
+        #fileList::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #fileList::-webkit-scrollbar-track {
+            background: #f1f9ff;
+            border-radius: 10px;
+        }
+
+        #fileList::-webkit-scrollbar-thumb {
+            background: #66b3ff;
+            border-radius: 10px;
+        }
+
+        #fileList::-webkit-scrollbar-thumb:hover {
+            background: #4da6ff;
+        }
+
+        /* Text colors */
+        .text-primary {
+            color: #3399ff !important;
+        }
+
+        /* Form labels */
+        .form-label {
+            color: #2c5282;
+            font-weight: 500;
+        }
+
+        /* Background colors */
+        .bg-light-blue {
+            background-color: #f0f8ff !important;
+        }
+
+        /* Feature cards in hero */
+        .hero-feature {
+            padding: 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        /* File icon color */
+        .fa-file-alt {
+            color: #66b3ff;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-brain me-2"></i>SmartHire.AI
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('index') }}">
+                    <i class="fas fa-home me-1"></i>Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h1 class="display-4 fw-bold mb-4">SmartHire.AI</h1>
+                        <p class="lead mb-4">Upload multiple resumes and get AI-powered analysis with job matching, skill assessment, and candidate ranking.</p>
+                        <div class="d-flex gap-3 mb-4">
+                            <div class="text-center hero-feature">
+                                <div class="feature-icon mb-2">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <small class="text-white">AI Analysis</small>
+                            </div>
+                            <div class="text-center hero-feature">
+                                <div class="feature-icon mb-2">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <small class="text-white">Score Matching</small>
+                            </div>
+                            <div class="text-center hero-feature">
+                                <div class="feature-icon mb-2">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <small class="text-white">Email Reports</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="text-center">
+                            <i class="fas fa-file-alt text-white" style="font-size: 8rem; opacity: 0.7;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container my-5">
+            <form method="POST" action="{{ url_for('analyze_resumes') }}" enctype="multipart/form-data" id="resumeForm">
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-building me-2"></i>Company Information
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="company_name" class="form-label">Company Name *</label>
+                                    <input type="text" class="form-control" id="company_name" name="company_name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="hr_name" class="form-label">HR Manager Name *</label>
+                                    <input type="text" class="form-control" id="hr_name" name="hr_name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="hr_email" class="form-label">HR Email *</label>
+                                    <input type="email" class="form-control" id="hr_email" name="hr_email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email_password" class="form-label">Email Password *</label>
+                                    <input type="password" class="form-control" id="email_password" name="email_password" required>
+                                    <div class="form-text text-muted small">Used for sending automated emails to candidates</div>
+                                    <div class="form-text text-muted small">How to generate 16 app password</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-bullseye me-2"></i>Job Analysis Settings
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="target_role" class="form-label">Target Job Role</label>
+                                    <select class="form-select" id="target_role" name="target_role">
+                                        <option value="">Auto-detect role from resume</option>
+                                        <optgroup label="IT & Technology Roles">
+                                            <option value="Data Analyst">Data Analyst</option>
+                                            <option value="Software Developer">Software Developer</option>
+                                            <option value="Web Developer">Web Developer</option>
+                                            <option value="Full Stack Developer">Full Stack Developer</option>
+                                            <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
+                                            <option value="Cloud Engineer">Cloud Engineer</option>
+                                            <option value="AI/ML Engineer">AI/ML Engineer</option>
+                                            <option value="DevOps Engineer">DevOps Engineer</option>
+                                            <option value="Mobile Developer">Mobile Developer</option>
+                                            <option value="UI/UX Designer">UI/UX Designer</option>
+                                            <option value="Graphic Designer">Graphic Designer</option>
+                                            <option value="Product Manager">Product Manager</option>
+                                            <option value="Other">Other (Use JD or Custom Requirements)</option>
+                                        </optgroup>
+                                    </select>
+                                    <div class="form-text">Select "Other" to use skills from JD file or auto-detection</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="hr_requirements" class="form-label">Additional Requirements</label>
+                                    <textarea class="form-control" id="hr_requirements" name="hr_requirements" rows="4" placeholder="Enter any specific requirements or preferences for candidates..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-file-alt me-2"></i>Upload Job Description (JD) File
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="file" class="form-control" name="jd_file" accept=".pdf,.txt">
+                        <small class="form-text text-muted mt-2">Upload the JD in .txt or .pdf format (optional, recommended when using "Other" role)</small>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-upload me-2"></i>Upload Resume Files
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="file-drop-zone mb-3" id="dropZone">
+                            <i class="fas fa-cloud-upload-alt fa-3x mb-3" style="color: #66b3ff;"></i>
+                            <h6>Drag & Drop Resume Files Here</h6>
+                            <p class="text-muted mb-3">or click to browse files</p>
+                            <input type="file" class="form-control" id="resume_files" name="resume_files" multiple accept=".pdf,.docx,.doc,.txt" style="display: none;" required>
+                            <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('resume_files').click()">
+                                <i class="fas fa-folder-open me-2"></i>Browse Files
+                            </button>
+                            <div class="mt-3">
+                                <small class="text-muted">
+                                    Supported formats: PDF, DOCX, DOC, TXT | Max size: 16MB per file
+                                </small>
+                            </div>
+                        </div>
+                        <div id="fileList" class="mt-3"></div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                        <i class="fas fa-cogs me-2"></i>Analyze Resumes
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="container my-5">
+            <div class="row text-center">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <i class="fas fa-search-plus feature-icon mb-3"></i>
+                            <h5 class="text-primary">Smart Analysis</h5>
+                            <p class="text-muted">AI-powered resume parsing and skill extraction with job role matching</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <i class="fas fa-chart-bar feature-icon mb-3"></i>
+                            <h5 class="text-primary">Intelligent Scoring</h5>
+                            <p class="text-muted">Automated candidate scoring and ranking based on job requirements</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <i class="fas fa-robot feature-icon mb-3"></i>
+                            <h5 class="text-primary">AI Detection</h5>
+                            <p class="text-muted">Detect AI-generated resume content to ensure authenticity</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2026 Resume Checker for HR Recruiters. All rights reserved.</p>
+            
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Drag and Drop Functionality
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('resume_files');
+        const fileList = document.getElementById('fileList');
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            fileInput.files = files;
+            displayFiles(files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            displayFiles(e.target.files);
+        });
+
+        function displayFiles(files) {
+            fileList.innerHTML = '';
+            Array.from(files).forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <span class="file-name"><i class="fas fa-file-alt me-2" style="color: #66b3ff;"></i>${file.name}</span>
+                    <span class="file-size">${(file.size / 1024).toFixed(2)} KB</span>
+                    <i class="fas fa-times remove-file" onclick="removeFile(${index})"></i>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        function removeFile(index) {
+            const dt = new DataTransfer();
+            const files = fileInput.files;
+            for (let i = 0; i < files.length; i++) {
+                if (i !== index) dt.items.add(files[i]);
+            }
+            fileInput.files = dt.files;
+            displayFiles(fileInput.files);
+        }
+
+        // Form Submit Loading Animation
+        document.getElementById('resumeForm').addEventListener('submit', function() {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Analyzing...';
+        });
+    </script>
+</body>
+</html>

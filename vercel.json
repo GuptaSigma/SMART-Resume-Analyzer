@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "functions": {
+    "app.py": {
+      "maxDuration": 60,
+      "memory": 3008,
+      "includeFiles": "**"
+    }
+  },
+  "builds": [
+    {
+      "src": "app.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "250mb"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "app.py"
+    }
+  ]
+}
