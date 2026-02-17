@@ -1,29 +1,20 @@
 {
   "version": 2,
-  "functions": {
-    "app.py": {
-      "maxDuration": 60,
-      "memory": 3008,
-      "includeFiles": "**"
-    }
-  },
   "builds": [
     {
-      "src": "app.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "250mb"
-      }
+      "src": "api/index.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
-    },
-    {
       "src": "/(.*)",
-      "dest": "app.py"
+      "dest": "api/index.py"
     }
-  ]
+  ],
+  "env": {
+    "UPLOAD_DIR": "/tmp",
+    "DATABASE_URL": "sqlite:////tmp/resume_analyzer.db",
+    "SESSION_SECRET": "change-me-in-vercel-env"
+  }
 }
