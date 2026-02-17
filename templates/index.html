@@ -431,8 +431,49 @@
                                 <div class="mb-3">
                                     <label for="email_password" class="form-label">Email Password *</label>
                                     <input type="password" class="form-control" id="email_password" name="email_password" required>
-                                    <div class="form-text text-muted small">Used for sending automated emails to candidates</div>
-                                    <div class="form-text text-muted small">How to generate 16 app password</div>
+                                    
+                                    <div class="mt-3">
+                                        <div class="alert alert-warning py-2 px-3 border-warning d-flex align-items-center justify-content-between mb-2 shadow-sm" style="background-color: #fff9e6; border-radius: 8px;">
+                                            <span class="small fw-bold text-dark">
+                                                <i class="fas fa-exclamation-triangle me-1"></i> Important: Gmail users must use App Password, not regular password
+                                            </span>
+                                            <button type="button" class="btn btn-sm btn-outline-warning py-0 px-2 small text-dark border-warning" data-bs-toggle="collapse" data-bs-target="#appPasswordGuide" style="font-size: 0.75rem;">
+                                                <i class="fas fa-info-circle me-1"></i> How to generate App Password
+                                            </button>
+                                        </div>
+
+                                        <div class="collapse" id="appPasswordGuide">
+                                            <div class="card card-body border-warning small ps-4 pe-4 pt-3 pb-3 shadow-sm" style="background-color: #fffdf5; border-radius: 12px;">
+                                                <h6 class="fw-bold mb-3"><i class="fas fa-key me-2 text-warning"></i> Gmail App Password Setup Guide</h6>
+                                                
+                                                <p class="fw-bold mb-2">Why App Password is required:</p>
+                                                <p class="text-muted mb-3">Gmail requires App Passwords for third-party applications to access your account securely. Your regular Gmail password will NOT work for SMTP authentication.</p>
+
+                                                <p class="fw-bold mb-2">Step-by-step instructions:</p>
+                                                <ol class="ps-3 mb-3 text-muted">
+                                                    <li class="mb-1">Go to your <a href="https://myaccount.google.com/security" target="_blank" class="text-primary text-decoration-none fw-bold">Google Account Security page <i class="fas fa-external-link-alt ms-1" style="font-size: 0.7rem;"></i></a></li>
+                                                    <li class="mb-1">Under "How you sign in to Google", select <strong>2-Step Verification</strong>
+                                                        <ul class="ps-3 mt-1"><li>If not enabled, you must enable it first</li></ul>
+                                                    </li>
+                                                    <li class="mb-1">Scroll down and select <strong>App passwords</strong></li>
+                                                    <li class="mb-1">You might be asked to sign in again</li>
+                                                    <li class="mb-1">Under "Select app", choose <strong>Mail</strong></li>
+                                                    <li class="mb-1">Under "Select device", choose <strong>Other (Custom name)</strong></li>
+                                                    <li class="mb-1">Enter a name like "Resume Analyzer" and click <strong>Generate</strong></li>
+                                                    <li class="mb-1">Google will display a 16-digit App Password (e.g., <span class="text-danger opacity-75">xxxx xxxx xxxx xxxx</span>)</li>
+                                                    <li class="mb-1 text-dark"><strong>Copy this password</strong> and paste it in the Email Password field above (you can paste with or without spaces)</li>
+                                                </ol>
+
+                                                <div class="alert alert-info py-2 px-3 mb-3 border-info d-flex align-items-src" style="background-color: #e6f7ff; border-radius: 8px;">
+                                                    <span class="small"><i class="fas fa-lightbulb me-2 text-primary"></i> <strong>Tip:</strong> You can't view the App Password again after closing the window, but you can always generate a new one if needed.</span>
+                                                </div>
+
+                                                <a href="https://support.google.com/accounts/answer/185833" target="_blank" class="btn btn-primary btn-sm w-auto d-inline-flex align-items-center">
+                                                    <i class="fas fa-file-alt me-2"></i> Official Google Help Article
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
