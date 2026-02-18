@@ -1,234 +1,434 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SmartHire.AI - AI Audit Analysis</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa',
-                            500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a', 950: '#172554',
-                        },
-                    },
-                },
-            },
-        }
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>AI Detection Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     <style>
-        @keyframes barGrow {
-            from { height: 0; opacity: 0; }
-            to { opacity: 1; }
+        body { 
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
         }
-        .animate-bar { animation: barGrow 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
         
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        /* Navbar styling */
+        .navbar {
+            position: relative;
+            background-color: #0d6efd;
+            padding: 1rem 0;
+            margin-bottom: 0;
+            width: 100%;
         }
-
-        .ai-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        
+        .navbar-wrapper {
+            width: 100%; /* Full width */
+            max-width: calc(100% - 4rem); /* Screen width minus padding */
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: .7; transform: scale(1.05); }
+        
+        .navbar-brand {
+            color: white !important;
+            font-size: 1.25rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        
+        .navbar-brand:hover {
+            color: #e0e0e0 !important;
+        }
+        
+        .btn-outline-light {
+            border-color: white;
+            color: white;
+        }
+        
+        .btn-outline-light:hover {
+            background-color: white;
+            color: #0d6efd;
+        }
+        
+        /* Theme toggle button */
+        .theme-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Container - AUTOMATIC WIDTH */
+        .container {
+            width: 100%; /* Full width automatic */
+            max-width: calc(100% - 4rem); /* Screen width minus padding */
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .ai-detection-chart-section {
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin: 2rem 0;
+            width: 100%; /* Full width of container */
+        }
+        
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            border: 4px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 1rem;
+        }
+        
+        .chart-container { 
+            margin-bottom: 2rem; 
+        }
+        
+        .bar-graph-section {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px #0001;
+            padding: 2rem 0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-title { 
+            text-align: center; 
+            color: #0d6efd; 
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .bar-graph {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            height: 250px;
+        }
+        
+        .bar-container { 
+            width: 80px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        
+        .bar {
+            width: 100%;
+            border-radius: 0.5rem 0.5rem 0 0;
+            box-shadow: 0 -2px 8px #0003;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            transition: height 0.5s;
+            font-weight: bold;
+            color: #fff;
+            font-size: 1rem;
+            padding-bottom: 0.5rem;
+        }
+        
+        .bar.human { 
+            background: linear-gradient(to top, #28a745, #34ce57);
+        }
+        
+        .bar.ai { 
+            background: linear-gradient(to top, #dc3545, #e64555);
+        }
+        
+        .bar-label { 
+            font-weight: 600; 
+            color: #444; 
+            margin-top: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .feature-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Automatic columns */
+            gap: 1.5rem;
+            margin-top: 2rem;
+            width: 100%;
+        }
+        
+        .feature-card { 
+            background: white; 
+            border: 1px solid #dee2e6; 
+            border-radius: 0.5rem; 
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .feature-title { 
+            font-weight: 600; 
+            color: #495057; 
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .feature-value { 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+            color: #007bff; 
+        }
+        
+        .confidence-section { 
+            margin-top: 2rem; 
+            padding-top: 1.5rem; 
+            border-top: 1px dashed #dee2e6; 
+            text-align: center;
+        }
+        
+        .confidence-score { 
+            font-size: 2.5rem; 
+            font-weight: bold; 
+            color: #198754;
+            margin: 1rem 0;
+        }
+        
+        .confidence-title { 
+            font-weight: 600; 
+            color: #212529;
+            font-size: 1.1rem;
+        }
+        
+        /* Responsive Design - Automatic */
+        @media (max-width: 768px) {
+            .navbar-wrapper {
+                padding: 0 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                max-width: calc(100% - 2rem);
+            }
+            
+            .navbar-brand {
+                font-size: 1rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
+                max-width: calc(100% - 2rem);
+            }
+            
+            .ai-detection-chart-section {
+                padding: 1.5rem;
+                margin: 1rem 0;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr; /* Single column on mobile */
+            }
+            
+            .profile-photo {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .chart-title {
+                font-size: 1.2rem;
+            }
+            
+            .bar-graph {
+                height: 200px;
+            }
+            
+            .confidence-score {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .navbar-wrapper {
+                padding: 0 0.5rem;
+                max-width: calc(100% - 1rem);
+            }
+            
+            .container {
+                padding: 0 0.5rem;
+                max-width: calc(100% - 1rem);
+            }
+            
+            .ai-detection-chart-section {
+                padding: 1rem;
+                border-radius: 0.5rem;
+            }
+            
+            .btn-outline-light {
+                font-size: 0.875rem;
+                padding: 0.375rem 0.75rem;
+            }
+        }
+        
+        /* Large screens - better spacing */
+        @media (min-width: 1400px) {
+            .container,
+            .navbar-wrapper {
+                max-width: calc(100% - 8rem); /* More padding on large screens */
+                padding: 0 4rem;
+            }
+        }
+        
+        /* Animation for bars */
+        @keyframes growBar {
+            from {
+                height: 0;
+            }
+        }
+        
+        .bar {
+            animation: growBar 1s ease-out;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
-
-<nav class="bg-primary-600 text-white shadow-lg sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16 items-center">
-            <a class="flex items-center space-x-2 text-xl font-bold" href="/">
-                <i class="fas fa-brain"></i>
-                <span>SmartHire.AI</span>
+<body>
+    
+    
+    <!-- Modified Navbar Structure -->
+    <nav class="navbar">
+        <div class="navbar-wrapper">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-brain me-2"></i>SmartHire.AI
             </a>
-            <button onclick="window.close()" class="inline-flex items-center px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-sm font-bold transition-all border border-white/20">
-                <i class="fas fa-times mr-2 text-xs"></i>Close Analysis
+            <button class="btn btn-outline-light" onclick="window.close()">
+                <i class="fas fa-times me-2"></i>Close Window
             </button>
         </div>
-    </div>
-</nav>
-
-<div class="max-w-5xl mx-auto px-4 py-8 md:py-12">
-    <!-- Analysis Header -->
-    <div class="bg-white rounded-[2.5rem] p-8 md:p-12 mb-8 border border-slate-200 shadow-sm relative overflow-hidden">
-        <div class="absolute -top-24 -right-24 w-96 h-96 bg-primary-50 rounded-full opacity-50 blur-3xl"></div>
-        <div class="relative flex flex-col md:flex-row items-center gap-10">
-            <div class="relative group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-primary-600 to-purple-600 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                <img src="https://www.digital-science.com/wp-content/uploads/2024/02/ai-academic-writing-research-stock-image-1.jpg" 
-                     alt="Analysis Image" 
-                     class="relative w-40 h-40 md:w-48 md:h-48 rounded-3xl object-cover border-4 border-white shadow-2xl transition-transform group-hover:scale-[1.02]">
+    </nav>
+    
+    <div class="container">
+        <div class="ai-detection-chart-section">
+            <div class="header text-center mb-4">
+                <img src="https://www.digital-science.com/wp-content/uploads/2024/02/ai-academic-writing-research-stock-image-1.jpg" alt="Profile Photo" class="profile-photo">
+                <h1><i class="fas fa-robot me-3"></i>AI Detection Analysis</h1>
+                <h3 class="text-muted">{{ analysis.candidate_name }}</h3>
+                <p class="text-muted mb-0">Resume: {{ analysis.resume_filename }}</p>
             </div>
-            <div class="text-center md:text-left">
-                <div class="inline-flex items-center px-4 py-1.5 bg-amber-50 text-amber-700 rounded-full border border-amber-200 text-xs font-black uppercase tracking-widest mb-6">
-                    <i class="fas fa-robot mr-2 ai-pulse"></i>Deep Pattern Audit
-                </div>
-                <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-3">AI Detection Analysis</h1>
-                <p class="text-2xl font-bold text-primary-600">{{ analysis.candidate_name }}</p>
-                <div class="flex items-center justify-center md:justify-start mt-4 text-slate-500 font-medium">
-                    <i class="fas fa-file-pdf mr-2"></i>{{ analysis.resume_filename }}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Comparison Section -->
-    <div class="grid lg:grid-cols-12 gap-8 mb-12">
-        <!-- Visualization Card -->
-        <div class="lg:col-span-12 bg-white rounded-[2.5rem] p-8 md:p-12 border border-slate-200 shadow-sm">
-            <h3 class="text-center font-black text-slate-900 text-2xl mb-12 uppercase tracking-widest flex items-center justify-center">
-                <span class="w-12 h-1 bg-slate-200 mr-4 rounded-full"></span>
-                Content Composition
-                <span class="w-12 h-1 bg-slate-200 ml-4 rounded-full"></span>
-            </h3>
-
-            <div class="flex justify-center items-end gap-16 md:gap-24 h-[400px] mb-12">
-                <!-- Human Bar -->
-                <div class="flex flex-col items-center w-24 md:w-32">
-                    <div class="w-full bg-emerald-500 rounded-3xl relative animate-bar shadow-[0_20px_50px_rgba(16,185,129,0.3)] flex items-end justify-center overflow-hidden" 
-                         style="height: {{ analysis.human_percentage }}%;">
-                        <div class="absolute inset-0 bg-white/10"></div>
-                        <span class="text-2xl md:text-3xl font-black text-white p-4 relative z-10">{{ analysis.human_percentage }}%</span>
-                    </div>
-                    <div class="mt-8 text-center">
-                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-2">
-                            <i class="fas fa-user text-xl"></i>
+            
+            <div class="chart-container">
+                <div class="bar-graph-section">
+                    <div class="chart-title">AI vs Human Content Detection</div>
+                    <div class="bar-graph">
+                        <div class="bar-container">
+                            <div class="bar human" id="humanBar" style="height: {{ analysis.human_percentage * 2 }}px;">
+                                {{ analysis.human_percentage }}%
+                            </div>
+                            <div class="bar-label">Human</div>
                         </div>
-                        <span class="text-slate-400 font-black uppercase text-xs tracking-widest">Human</span>
-                    </div>
-                </div>
-
-                <!-- AI Bar -->
-                <div class="flex flex-col items-center w-24 md:w-32">
-                    <div class="w-full bg-rose-600 rounded-3xl relative animate-bar shadow-[0_20px_50px_rgba(225,29,72,0.3)] flex items-end justify-center overflow-hidden" 
-                         style="height: {{ analysis.ai_percentage }}%;">
-                        <div class="absolute inset-0 bg-white/10"></div>
-                        <span class="text-2xl md:text-3xl font-black text-white p-4 relative z-10">{{ analysis.ai_percentage }}%</span>
-                    </div>
-                    <div class="mt-8 text-center">
-                        <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mx-auto mb-2">
-                            <i class="fas fa-microchip text-xl"></i>
+                        <div class="bar-container">
+                            <div class="bar ai" id="aiBar" style="height: {{ analysis.ai_percentage * 2 }}px;">
+                                {{ analysis.ai_percentage }}%
+                            </div>
+                            <div class="bar-label">AI</div>
                         </div>
-                        <span class="text-slate-400 font-black uppercase text-xs tracking-widest">AI Content</span>
                     </div>
-                </div>
-            </div>
-
-            <!-- Confidence Metric -->
-            <div class="pt-12 border-t border-slate-100 text-center">
-                <p class="text-slate-500 font-bold uppercase tracking-widest text-sm mb-4">Total System Confidence</p>
-                <div class="text-7xl font-black mb-6 {% if analysis.ai_confidence >= 75 %}text-rose-600{% elif analysis.ai_confidence >= 40 %}text-amber-500{% else %}text-emerald-600{% endif %}">
-                    {{ analysis.ai_confidence }}%
                 </div>
                 
-                <div class="max-w-md mx-auto p-4 rounded-2xl flex items-center justify-center gap-3 {% if analysis.ai_confidence >= 75 %}bg-rose-50 text-rose-700{% elif analysis.ai_confidence >= 40 %}bg-amber-50 text-amber-700{% else %}bg-emerald-50 text-emerald-700{% endif %}">
-                    {% if analysis.ai_confidence >= 75 %}
-                        <i class="fas fa-shield-alt text-xl"></i>
-                        <span class="font-black text-sm">CRITICAL: High AI usage detected in this resume.</span>
-                    {% elif analysis.ai_confidence >= 40 %}
-                        <i class="fas fa-info-circle text-xl"></i>
-                        <span class="font-black text-sm">MODERATE: Potential AI assistance suspected.</span>
-                    {% else %}
-                        <i class="fas fa-check-circle text-xl"></i>
-                        <span class="font-black text-sm">TRUSTED: Content appears highly organic.</span>
-                    {% endif %}
+                <div class="confidence-section">
+                    <div class="confidence-title">AI Confidence — How much AI is present</div>
+                    <div class="confidence-score">{{ analysis.ai_confidence }}%</div>
+                    <p class="mb-0">
+                        {% if analysis.ai_confidence >= 75 %}
+                            <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                            High confidence of AI-generated content.
+                        {% elif analysis.ai_confidence >= 40 %}
+                            <i class="fas fa-info-circle text-info me-2"></i>
+                            Moderate confidence of AI-generated content.
+                        {% else %}
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Low confidence of AI-generated content.
+                        {% endif %}
+                    </p>
+                    <small class="text-muted d-block mt-2">
+                        Note: This is a model confidence estimate (0-100%). It indicates how sure the analyzer is that this resume contains AI-generated text.
+                    </small>
                 </div>
-                <p class="mt-6 text-slate-400 text-xs font-medium max-w-sm mx-auto leading-relaxed italic">
-                    Our analyzer measures 50+ linguistic features. A high percentage indicates the text closely matches patterns found in GPT-4 and Claude models.
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-title">Readability Score</div>
+                    <div class="feature-value">{{ "%.1f"|format(analysis.features.readability) }}</div>
+                    <small class="text-muted">Flesch Reading Ease</small>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">AI Phrases Detected</div>
+                    <div class="feature-value">{{ analysis.features.ai_phrases }}</div>
+                    <small class="text-muted">Common AI expressions</small>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">Sentiment Neutrality</div>
+                    <div class="feature-value">{{ "%.2f"|format(analysis.features.sentiment_neutrality) }}</div>
+                    <small class="text-muted">0.0 = Emotional, 1.0 = Neutral</small>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">Burstiness Score</div>
+                    <div class="feature-value">{{ "%.2f"|format(analysis.features.burstiness) }}</div>
+                    <small class="text-muted">Sentence length variation</small>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">Perplexity Score</div>
+                    <div class="feature-value">{{ "%.2f"|format(analysis.features.perplexity) }}</div>
+                    <small class="text-muted">Language predictability</small>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">Grammar Errors</div>
+                    <div class="feature-value">{{ analysis.features.grammar_errors }}</div>
+                    <small class="text-muted">Detected inconsistencies</small>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">Entropy Score</div>
+                    <div class="feature-value">{{ "%.2f"|format(analysis.features.entropy_score) }}</div>
+                    <small class="text-muted">Character predictability</small>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">Bullet Score</div>
+                    <div class="feature-value">{{ "%.2f"|format(analysis.features.bullet_score) }}</div>
+                    <small class="text-muted">Bullet point usage</small>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">Stopword Ratio</div>
+                    <div class="feature-value">{{ "%.2f"|format(analysis.features.stopword_ratio) }}</div>
+                    <small class="text-muted">Frequency of common words</small>
+                </div>
+            </div>
+            
+            <div class="alert alert-info mt-4">
+                <h6><i class="fas fa-info-circle me-2"></i>How AI Detection Works</h6>
+                <p class="mb-0">
+                    Our AI detection algorithm analyzes multiple linguistic features including writing patterns,
+                    phrase usage, sentiment neutrality, and grammatical perfection to determine the likelihood
+                    that content was generated by an AI system.
                 </p>
             </div>
         </div>
     </div>
-
-    <!-- Features Micro-Matrix -->
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
-        <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
-            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <i class="fas fa-book-reader"></i>
-            </div>
-            <div class="text-3xl font-black text-slate-900 mb-1">{{ "%.1f"|format(analysis.features.readability) }}</div>
-            <div class="text-xs font-black text-slate-400 uppercase tracking-widest">Readability Ease</div>
-        </div>
-
-        <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
-            <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <i class="fas fa-feather-alt"></i>
-            </div>
-            <div class="text-3xl font-black text-slate-900 mb-1">{{ analysis.features.ai_phrases }}</div>
-            <div class="text-xs font-black text-slate-400 uppercase tracking-widest">AI Phrase Flags</div>
-        </div>
-
-        <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
-            <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <i class="fas fa-balance-scale"></i>
-            </div>
-            <div class="text-3xl font-black text-slate-900 mb-1">{{ "%.2f"|format(analysis.features.sentiment_neutrality) }}</div>
-            <div class="text-xs font-black text-slate-400 uppercase tracking-widest">Neutrality Index</div>
-        </div>
-
-        <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
-            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <i class="fas fa-waveform-path"></i>
-            </div>
-            <div class="text-3xl font-black text-slate-900 mb-1">{{ "%.2f"|format(analysis.features.burstiness) }}</div>
-            <div class="text-xs font-black text-slate-400 uppercase tracking-widest">Burstiness Score</div>
-        </div>
-
-        <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
-            <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <i class="fas fa-skull-crossbones"></i>
-            </div>
-            <div class="text-3xl font-black text-slate-900 mb-1">{{ "%.2f"|format(analysis.features.perplexity) }}</div>
-            <div class="text-xs font-black text-slate-400 uppercase tracking-widest">Perplexity</div>
-        </div>
-
-        <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
-            <div class="w-12 h-12 bg-teal-50 text-teal-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <i class="fas fa-spell-check"></i>
-            </div>
-            <div class="text-3xl font-black text-slate-900 mb-1">{{ analysis.features.grammar_errors }}</div>
-            <div class="text-xs font-black text-slate-400 uppercase tracking-widest">Syntax Risks</div>
-        </div>
-    </div>
-
-    <!-- Information Card -->
-    <div class="bg-primary-900 text-white rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden shadow-2xl">
-        <div class="absolute top-0 right-0 p-12 opacity-10">
-            <i class="fas fa-brain text-9xl"></i>
-        </div>
-        <div class="relative z-10 lg:flex items-center gap-12">
-            <div class="lg:w-1/2 mb-8 lg:mb-0">
-                <h4 class="text-3xl font-black mb-4">Under the Hood</h4>
-                <p class="text-primary-200 leading-relaxed font-medium">
-                    Our AI audit engine doesn't just look for specific words. It analyzes structural "Burstiness" (sentence length variation) and "Perplexity" (how predictable the language is). 
-                    AI tends to write in very even, predictable steps, whereas humans vary their rhythm significantly.
-                </p>
-            </div>
-            <div class="lg:w-1/2 grid grid-cols-1 gap-4">
-                <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
-                    <p class="text-xs font-black uppercase text-primary-300 mb-2">Algorithm v4.2</p>
-                    <p class="text-sm font-bold">Linguistic Pattern Matching against LLM Datasets</p>
-                </div>
-                <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
-                    <p class="text-xs font-black uppercase text-primary-300 mb-2">Neural Scan</p>
-                    <p class="text-sm font-bold">Sentimental Neutrality & Professional Tonality Audit</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
