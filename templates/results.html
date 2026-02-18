@@ -1,510 +1,291 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SmartHire.AI</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-<style>
-/* Custom CSS Start */
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartHire.AI - Analysis Results</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa',
+                            500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a', 950: '#172554',
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .score-excellent { @apply bg-green-600 text-white shadow-lg shadow-green-200; }
+        .score-good { @apply bg-blue-500 text-white shadow-lg shadow-blue-200; }
+        .score-average { @apply bg-amber-500 text-white shadow-lg shadow-amber-200; }
+        .score-poor { @apply bg-red-600 text-white shadow-lg shadow-red-200; }
+        
+        .hr-skill-highlight {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            @apply border-2 border-green-500 text-green-900 font-bold;
+        }
 
-/* Automatic Width Container */
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa;
-}
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
 
-/* Navbar - Full Width Automatic */
-.navbar {
-    width: 100%;
-    padding: 1rem 0;
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-.navbar .container {
-    width: 100%;
-    max-width: calc(100% - 4rem);
-    margin: 0 auto;
-    padding: 0 2rem;
-}
-
-/* Main Container - Automatic Width */
-.container.my-4 {
-    width: 100%;
-    max-width: calc(100% - 4rem);
-    margin: 2rem auto !important;
-    padding: 0 2rem;
-}
-
-.score-badge {
-    font-size: 1.2rem;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-}
-
-/* Score colors */
-.score-excellent { background-color: #198754; color: white; }
-.score-good { background-color: #0dcaf0; color: white; }
-.score-average { background-color: #ffc107; color: black; }
-.score-poor { background-color: #dc3545; color: white; }
-
-/* Candidate card hover effect */
-.candidate-card {
-    transition: all 0.3s ease;
-    border: 1px solid #dee2e6;
-    border-radius: 0.5rem;
-}
-
-.candidate-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* Warning section gradient background */
-.ai-warning {
-    background: linear-gradient(45deg, #fff3cd, #f8d7da);
-    border: 1px solid #ffeaa7;
-    border-radius: 0.5rem;
-    padding: 0.75rem 1rem;
-}
-
-/* HR Flags Alert Box */
-.hr-flags-alert {
-    background: linear-gradient(135deg, #fff3cd 0%, #ffe5b4 100%);
-    border: 2px solid #ffc107;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin-top: 1rem;
-}
-
-.hr-flags-alert .alert-heading {
-    color: #856404;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.hr-flags-alert ul {
-    margin-bottom: 0;
-    padding-left: 1.5rem;
-}
-
-.hr-flags-alert li {
-    color: #856404;
-    font-weight: 500;
-    margin-bottom: 0.25rem;
-}
-
-/* ✅ NEW: HR Requirement Skills Highlighting */
-.hr-skill-highlight {
-    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-    padding: 0.4rem 0.8rem;
-    border-radius: 0.5rem;
-    border: 2px solid #28a745;
-    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
-    font-weight: 600;
-    display: inline-block;
-    margin: 0.2rem 0;
-}
-
-.hr-skill-highlight i {
-    font-size: 1.1rem;
-}
-
-.hr-skill-highlight span {
-    color: #155724;
-}
-
-/* Header section gradient and styling */
-.section-header {
-    background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    margin-bottom: 2rem;
-}
-
-/* Stats card styling */
-.stats-card {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    text-align: center;
-    transition: transform 0.2s;
-}
-
-.stats-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* Button minimal width */
-.email-btn {
-    min-width: 120px;
-}
-
-/* Toast container positioning */
-.toast-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
-}
-
-/* Responsive Grid for Cards */
-.row {
-    width: 100%;
-}
-
-/* Responsive Design - Automatic Adjustments */
-@media (max-width: 768px) {
-    .navbar .container {
-        max-width: calc(100% - 2rem);
-        padding: 0 1rem;
-    }
-    
-    .container.my-4 {
-        max-width: calc(100% - 2rem);
-        padding: 0 1rem;
-    }
-    
-    .section-header {
-        padding: 1rem;
-    }
-    
-    .section-header .d-flex {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .stats-card {
-        padding: 1rem;
-    }
-    
-    .stats-card h3 {
-        font-size: 1.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .navbar .container {
-        max-width: calc(100% - 1rem);
-        padding: 0 0.5rem;
-    }
-    
-    .container.my-4 {
-        max-width: calc(100% - 1rem);
-        padding: 0 0.5rem;
-    }
-    
-    .section-header {
-        padding: 0.75rem;
-    }
-    
-    .email-btn {
-        min-width: 100px;
-        font-size: 0.875rem;
-    }
-    
-    .score-badge {
-        font-size: 1rem;
-        padding: 0.4rem 0.8rem;
-    }
-}
-
-/* Large screens - better spacing */
-@media (min-width: 1400px) {
-    .navbar .container,
-    .container.my-4 {
-        max-width: calc(100% - 8rem);
-        padding: 0 4rem;
-    }
-}
-
-/* Ultra wide screens */
-@media (min-width: 1920px) {
-    .navbar .container,
-    .container.my-4 {
-        max-width: calc(100% - 12rem);
-        padding: 0 6rem;
-    }
-}
-</style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom">
-    <div class="container">
-        <a class="navbar-brand" href="/">
-            <i class="fas fa-brain me-2"></i>SmartHire.AI
-        </a>
-        <div class="navbar-nav ms-auto">
-            <a class="nav-link" href="/">
-                <i class="fas fa-arrow-left me-2"></i>New Analysis
+<nav class="bg-primary-600 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+            <a class="flex items-center space-x-2 text-xl font-bold" href="/">
+                <i class="fas fa-brain"></i>
+                <span>SmartHire.AI</span>
             </a>
+            <div class="flex space-x-6">
+                <a class="hover:text-blue-200 transition-colors flex items-center text-sm font-medium" href="/">
+                    <i class="fas fa-arrow-left mr-2"></i>New Analysis
+                </a>
+            </div>
         </div>
     </div>
 </nav>
 
-<div class="toast-container"></div>
+<div class="toast-container fixed top-5 right-5 z-[9999] flex flex-col gap-3"></div>
 
-<div class="container my-4">
-    <div class="section-header text-center">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div></div>
-            <div class="text-center">
-                <h1><i class="fas fa-chart-bar me-3"></i>Resume Analysis Results</h1>
-                <p class="lead mb-0">{{ company_name }} | Analyzed by {{ hr_name }}</p>
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Header Section -->
+    <div class="bg-white rounded-3xl p-8 mb-8 border border-slate-200 shadow-sm overflow-hidden relative">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full -mr-32 -mt-32 opacity-50"></div>
+        <div class="relative flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <div class="inline-flex items-center px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-xs font-bold mb-4">
+                    <i class="fas fa-check-circle mr-2"></i>ANALYSIS COMPLETE
+                </div>
+                <h1 class="text-4xl font-black text-slate-900 tracking-tight">
+                    Results for <span class="text-primary-600">{{ company_name }}</span>
+                </h1>
+                <p class="text-slate-500 mt-2 text-lg font-medium flex items-center justify-center md:justify-start">
+                    <i class="fas fa-user-tie mr-2 text-slate-400"></i>Analyzed by {{ hr_name }}
+                </p>
             </div>
-            <div class="d-flex flex-column gap-2">
+            <div class="flex flex-wrap justify-center gap-4">
                 {% if shortlisted or not_selected %}
-                <a href="{{ url_for('download_report', company_name=company_name) }}" class="btn btn-success btn-lg">
-                    <i class="fas fa-download me-2"></i>Download Report
+                <a href="{{ url_for('download_report', company_name=company_name) }}" class="inline-flex items-center px-6 py-3.5 bg-green-600 text-white rounded-2xl font-bold hover:bg-green-700 transition-all shadow-lg hover:shadow-green-200 active:scale-95">
+                    <i class="fas fa-file-export mr-2"></i>Export CSV
                 </a>
-                <a href="{{ url_for('download_all_selected', company_name=company_name) }}" class="btn btn-success btn-lg">
-                    <i class="fas fa-check-circle me-2"></i>Select Candidates
+                <a href="{{ url_for('download_all_selected', company_name=company_name) }}" class="inline-flex items-center px-6 py-3.5 bg-primary-600 text-white rounded-2xl font-bold hover:bg-primary-700 transition-all shadow-lg hover:shadow-primary-200 active:scale-95">
+                    <i class="fas fa-layer-group mr-2"></i>Batch Selection
                 </a>
                 {% endif %}
             </div>
         </div>
     </div>
 
-    <div class="row mb-4">
-        <div class="col-md-3 mb-3">
-            <div class="stats-card">
-                <i class="fas fa-file-alt fa-2x text-primary mb-2"></i>
-                <h3>{{ total_processed }}</h3>
-                <p class="mb-0">Total Processed</p>
+    <!-- Quick Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 group hover:border-primary-400 transition-all">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-slate-50 text-slate-600 rounded-xl flex items-center justify-center group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
+                    <i class="fas fa-file-alt text-xl"></i>
+                </div>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total</span>
             </div>
+            <h3 class="text-3xl font-black text-slate-900">{{ total_processed }}</h3>
+            <p class="text-slate-500 text-sm font-medium mt-1">Resumes Analyzed</p>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="stats-card">
-                <i class="fas fa-star fa-2x text-success mb-2"></i>
-                <h3>{{ shortlisted|length }}</h3>
-                <p class="mb-0">Shortlisted</p>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 group hover:border-green-400 transition-all">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-star text-xl"></i>
+                </div>
+                <span class="text-xs font-bold text-green-500 uppercase tracking-widest">Shortlist</span>
             </div>
+            <h3 class="text-3xl font-black text-slate-900">{{ shortlisted|length }}</h3>
+            <p class="text-slate-500 text-sm font-medium mt-1">Met Criteria</p>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="stats-card">
-                <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
-                <h3>{{ not_selected|length }}</h3>
-                <p class="mb-0">Not Selected</p>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 group hover:border-red-400 transition-all">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-red-50 text-red-600 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-times-circle text-xl"></i>
+                </div>
+                <span class="text-xs font-bold text-red-500 uppercase tracking-widest">Rejected</span>
             </div>
+            <h3 class="text-3xl font-black text-slate-900">{{ not_selected|length }}</h3>
+            <p class="text-slate-500 text-sm font-medium mt-1">Below Threshold</p>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="stats-card">
-                <i class="fas fa-robot fa-2x text-warning mb-2"></i>
-                <h3>{{ (shortlisted + not_selected)|selectattr('is_ai_generated')|list|length }}</h3>
-                <p class="mb-0">AI Detected</p>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 group hover:border-amber-400 transition-all">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-robot text-xl"></i>
+                </div>
+                <span class="text-xs font-bold text-amber-500 uppercase tracking-widest">AI Audit</span>
             </div>
+            <h3 class="text-3xl font-black text-slate-900">{{ (shortlisted + not_selected)|selectattr('is_ai_generated')|list|length }}</h3>
+            <p class="text-slate-500 text-sm font-medium mt-1">AI Detected</p>
         </div>
     </div>
 
-    <div class="alert alert-info mb-5">
-        <h6><i class="fas fa-info-circle me-2"></i>Filter Score Explanation</h6>
-        <p class="mb-0">
-            <strong>Filter Score:</strong> The percentage score indicates how well a candidate's skills and experience match the job requirements.
-            <span class="badge score-excellent ms-2">75%+ = Shortlisted</span>
-            <span class="badge score-poor ms-2">&lt;75% = Not Selected</span>
-        </p>
-    </div>
-
+    <!-- Shortlisted Candidates -->
     {% if shortlisted %}
-    <div class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-success mb-0">
-                <i class="fas fa-check-circle me-2"></i>Shortlisted Candidates ({{ shortlisted|length }})
-            </h2>
-            <button class="btn btn-outline-success" onclick="sendAllCongratulations()">
-                <i class="fas fa-envelope me-2"></i>All Congratulations
+    <div class="mb-16 animate-fade-in">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+            <div class="flex items-center space-x-4">
+                <div class="w-2 h-10 bg-green-500 rounded-full"></div>
+                <div>
+                    <h2 class="text-3xl font-black text-slate-900">Shortlisted Talent</h2>
+                    <p class="text-slate-500 font-medium">Top performing candidates for your role</p>
+                </div>
+            </div>
+            <button onclick="sendAllCongratulations()" class="inline-flex items-center px-6 py-3 bg-white border-2 border-green-600 text-green-700 rounded-2xl font-black hover:bg-green-50 transition-all group active:scale-95 shadow-lg shadow-green-100/20">
+                <i class="fas fa-paper-plane mr-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                Email All Selected
             </button>
         </div>
-        <div class="row">
+
+        <div class="grid lg:grid-cols-2 gap-8">
             {% for candidate in shortlisted %}
-            <div class="col-lg-6 mb-4">
-                <div class="card candidate-card h-100 shortlisted-card">
-                    <div class="card-header d-flex justify-content-between align-items-start">
-                        <div>
-                            <h5 class="card-title mb-1">
-                                <i class="fas fa-user me-2"></i>{{ candidate.name }}
-                            </h5>
-                            <small class="text-muted">{{ candidate.resume_filename }}</small>
-                            <div class="mt-3">
-                                <small class="text-muted">Skills Checklist</small>
-                                <ul class="list-inline mt-2">
-                                    {% for s in candidate.skills %}
-                                    <li class="list-inline-item me-3 {% if s.is_hr_requirement %}hr-skill-highlight{% endif %}">
-                                        <i class="fas {{ 'fa-check-circle text-success' if s.match else 'fa-times-circle text-danger' }}"></i>
-                                        <span class="ms-1">{{ s.name }}</span>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-primary-200 transition-all group shortlisted-card overflow-hidden">
+                <div class="p-8">
+                    <!-- Card Top -->
+                    <div class="flex justify-between items-start mb-8">
+                        <div class="space-y-3 flex-1 overflow-hidden">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-primary-100 text-primary-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-user text-xl"></i>
+                                </div>
+                                <div class="overflow-hidden">
+                                    <h3 class="text-2xl font-black text-slate-900 truncate">{{ candidate.name }}</h3>
+                                    <p class="text-sm font-bold text-slate-400 flex items-center italic truncate">
+                                        <i class="fas fa-file-pdf mr-2 text-primary-400"></i>{{ candidate.resume_filename }}
+                                    </p>
+                                </div>
                             </div>
-                            {% if candidate.match_reasons %}
-                            <div class="mt-2">
-                                <small class="text-muted">Selected because:</small>
-                                {% for reason in candidate.match_reasons %}
-                                <span class="badge bg-light text-dark me-1">{{ reason }}</span>
-                                {% endfor %}
-                            </div>
-                            {% endif %}
-                            {% if candidate.missing_skills %}
-                            <div class="mt-2">
-                                <small class="text-muted">Missing skills:</small>
-                                {% for miss in candidate.missing_skills %}
-                                <span class="badge bg-danger text-white me-1">{{ miss }}</span>
-                                {% endfor %}
-                            </div>
-                            {% endif %}
                         </div>
-                        <div class="text-end">
-                            <span class="badge score-excellent score-badge">{{ candidate.match_score }}%</span>
+                        <div class="flex flex-col items-end gap-3 ml-4">
+                            <div class="w-20 h-20 rounded-2xl flex flex-col items-center justify-center text-center shadow-lg transition-transform group-hover:scale-110 {% if candidate.match_score >= 90 %}score-excellent{% elif candidate.match_score >= 80 %}score-good{% else %}score-average{% endif %}">
+                                <span class="text-2xl font-black leading-none">{{ candidate.match_score }}%</span>
+                                <span class="text-[10px] uppercase font-bold mt-1 opacity-80 tracking-tighter">Match</span>
+                            </div>
                             {% if candidate.is_ai_generated %}
-                            <div class="mt-1">
-                                <span class="badge bg-warning text-dark">
-                                    <i class="fas fa-robot me-1"></i>AI Detected
-                                </span>
-                            </div>
+                            <button onclick="checkAI('{{ candidate.resume_filename }}')" class="px-3 py-1.5 bg-amber-50 text-amber-600 text-[10px] font-black rounded-xl border border-amber-200 flex items-center hover:bg-amber-100 transition-colors">
+                                <i class="fas fa-robot mr-1.5 animate-pulse"></i>AI CONTENT FLAG
+                            </button>
                             {% endif %}
                         </div>
                     </div>
-                    <div class="card-body">
-                        <!-- HR FLAGS SECTION -->
-                        {% if candidate.hr_flags and candidate.hr_flags|length > 0 %}
-                        <div class="hr-flags-alert" role="alert">
-                            <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>HR Requirement Alerts:</h6>
-                            <ul>
-                                {% for flag in candidate.hr_flags %}
-                                <li>{{ flag }}</li>
-                                {% endfor %}
-                            </ul>
+
+                    <!-- HR Flags -->
+                    {% if candidate.hr_flags and candidate.hr_flags|length > 0 %}
+                    <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 mb-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-2 opacity-10">
+                            <i class="fas fa-exclamation-triangle text-4xl"></i>
                         </div>
-                        {% endif %}
-                        
-                        <div class="row mb-3">
-                            <div class="col-sm-6">
-                                <small class="text-muted"><i class="fas fa-envelope me-2" style="color: #D44638;"></i>Email</small>
-                                <p class="mb-1 candidate-email-placeholder">{{ candidate.email or 'Not provided' }}</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <small class="text-muted"><i class="fas fa-phone me-2" style="color: #28a745;"></i>Phone</small>
-                                <p class="mb-1">{{ candidate.phone or 'Not provided' }}</p>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <small class="text-muted"><i class="fas fa-bullseye me-2" style="color: #6f42c1;"></i>Target Role</small>
-                            <p class="mb-1">
-                                <span class="badge bg-primary">{{ candidate.target_role }}</span>
-                            </p>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-6">
-                                <small class="text-muted"><i class="fas fa-business-time me-2" style="color: #fd7e14;"></i>Experience</small>
-                                <p class="mb-1">{{ candidate.experience }}</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <small class="text-muted"><i class="fas fa-graduation-cap me-2" style="color: #800000;"></i>Education</small>
-                                <p class="mb-1">{{ candidate.education.title() if candidate.education else 'Not specified' }}</p>
+                        <h6 class="text-amber-900 font-black mb-2 flex items-center text-xs uppercase tracking-widest">
+                            <i class="fas fa-info-circle mr-2"></i>HR Filter Alerts
+                        </h6>
+                        <ul class="space-y-1 relative z-10">
+                            {% for flag in candidate.hr_flags %}
+                            <li class="text-amber-800 text-sm font-bold flex items-start">
+                                <span class="text-amber-400 mr-2">•</span>{{ flag }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <!-- Key Details Grid -->
+                    <div class="grid grid-cols-2 gap-6 mb-8 bg-slate-50 border border-slate-100 rounded-2xl p-6">
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Experience</span>
+                            <div class="flex items-center text-slate-700 font-bold">
+                                <i class="fas fa-briefcase mr-2 text-primary-500"></i>{{ candidate.experience }}
                             </div>
                         </div>
-                        {% if candidate.university %}
-                        <div class="mb-3">
-                            <small class="text-muted"><i class="fas fa-university me-2" style="color: #005A9C;"></i>University/College</small>
-                            <p class="mb-1">{{ candidate.university }}</p>
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Target Role</span>
+                            <div class="flex items-center">
+                                <span class="bg-primary-600 text-white text-[10px] font-black px-2 py-1 rounded-md">{{ candidate.target_role }}</span>
+                            </div>
                         </div>
-                        {% endif %}
-                        <div class="mb-3">
-                            <small class="text-muted"><i class="fas fa-certificate me-2" style="color: #ffc107;"></i>Certifications & Achievements</small>
-                            {% if candidate.certifications_and_achievements %}
-                            <ul class="list-unstyled">
-                                {% for cert in candidate.certifications_and_achievements %}
-                                <li>
-                                    <i class="fas fa-award me-1 text-success"></i>
-                                    {{ cert }}
-                                </li>
-                                {% endfor %}
-                            </ul>
-                            {% else %}
-                            <p class="mb-1">Not mentioned</p>
-                            {% endif %}
+                        <div class="space-y-1 col-span-2 border-t border-slate-200 pt-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Contact Information</span>
+                            <div class="flex flex-wrap gap-x-6 gap-y-2 mt-2">
+                                <a href="mailto:{{ candidate.email }}" class="text-sm font-bold text-slate-600 hover:text-primary-600 transition-colors flex items-center candidate-email-placeholder">
+                                    <i class="fas fa-envelope mr-2 text-primary-400 w-4"></i>{{ candidate.email or 'N/A' }}
+                                </a>
+                                <div class="text-sm font-bold text-slate-600 flex items-center">
+                                    <i class="fas fa-phone mr-2 text-primary-400 w-4"></i>{{ candidate.phone or 'N/A' }}
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <small class="text-muted"><i class="fab fa-github me-1 text-dark"></i> GitHub</small>
+                    </div>
+
+                    <!-- Skills Matrix -->
+                    <div class="mb-8">
+                        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center">
+                            <i class="fas fa-bolt mr-2 text-primary-600"></i>Requirement Matrix
+                        </h4>
+                        <div class="flex flex-wrap gap-2.5">
+                            {% for s in candidate.skills %}
+                            <div class="inline-flex items-center px-4 py-2 rounded-2xl text-xs font-bold transition-all border-2 {% if s.is_hr_requirement %}hr-skill-highlight{% elif s.match %}bg-emerald-50 text-emerald-700 border-emerald-200{% else %}bg-slate-50 text-slate-400 border-slate-100{% endif %}">
+                                <i class="fas {{ 'fa-check-circle text-emerald-500' if s.match else 'fa-times-circle' }} mr-2"></i>
+                                {{ s.name }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Projects & Links -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white border-2 border-slate-100 rounded-2xl p-4 hover:border-primary-100 transition-colors">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Repositories</span>
                             {% if candidate.github_profiles %}
-                            <ul class="list-unstyled mb-1">
                                 {% for gh in candidate.github_profiles %}
-                                <li>
-                                    <a href="{{ gh.url }}" target="_blank">{{ gh.url }}</a>
-                                    <small class="text-muted">({{ gh.source }})</small>
-                                </li>
+                                <a href="{{ gh.url }}" target="_blank" class="text-xs font-bold text-slate-800 hover:text-primary-600 transition-colors flex items-center mb-1 truncate">
+                                    <i class="fab fa-github mr-2"></i>Link {{ loop.index }}
+                                </a>
                                 {% endfor %}
-                            </ul>
                             {% else %}
-                            <p class="mb-1">Not mentioned</p>
+                            <span class="text-xs text-slate-400 font-medium italic">Not mentioned</span>
                             {% endif %}
                         </div>
-                        <div class="mb-3">
-                            <small class="text-muted"><i class="fab fa-linkedin me-1 text-primary"></i> LinkedIn</small>
+                        <div class="bg-white border-2 border-slate-100 rounded-2xl p-4 hover:border-primary-100 transition-colors">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Professional</span>
                             {% if candidate.linkedin_profile %}
-                            <p class="mb-1">
-                                <a href="{{ candidate.linkedin_profile }}" target="_blank">{{ candidate.linkedin_profile }}</a>
-                            </p>
+                            <a href="{{ candidate.linkedin_profile }}" target="_blank" class="text-xs font-bold text-slate-800 hover:text-primary-600 transition-colors flex items-center truncate">
+                                <i class="fab fa-linkedin mr-2 text-[#0077B5]"></i>LinkedIn Profile
+                            </a>
                             {% else %}
-                            <p class="mb-1">Not mentioned</p>
+                            <span class="text-xs text-slate-400 font-medium italic">No profile detected</span>
                             {% endif %}
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-6">
-                                <small class="text-muted"><i class="fas fa-user-tie me-2" style="color: #2F4F4F;"></i>Internship</small>
-                                <p class="mb-1">{{ 'Yes' if candidate.has_internship else 'No' }}</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <small class="text-muted"><i class="fas fa-laptop-code me-2" style="color: #0dcaf0;"></i>Hackathons</small>
-                                <p class="mb-1">{{ 'Yes' if candidate.has_hackathon else 'No' }}</p>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <small class="text-muted"><i class="fas fa-tasks me-2" style="color: #e83e8c;"></i>Projects</small>
-                            {% if candidate.projects %}
-                            <ul class="list-unstyled">
-                                {% for project in candidate.projects %}
-                                <li>
-                                    <i class="fas fa-code me-1 text-info"></i>
-                                    {{ project }}
-                                </li>
-                                {% endfor %}
-                            </ul>
-                            {% else %}
-                            <p class="mb-1">Not mentioned</p>
-                            {% endif %}
-                        </div>
-                        {% if candidate.is_ai_generated %}
-                        <div class="alert ai-warning py-2 mb-3">
-                            <small>
-                                <i class="fas fa-exclamation-triangle me-1"></i>
-                                This resume may contain AI-generated content. Review carefully.
-                            </small>
-                        </div>
-                        {% endif %}
                     </div>
-                    <div class="card-footer">
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-success email-btn" 
-                                onclick="sendEmail('{{ candidate.email }}', '{{ candidate.name }}', 'congratulations', this)">
-                                <i class="fas fa-envelope me-1"></i>Congratulate
-                            </button>
-                            <button class="btn btn-outline-danger email-btn" 
-                                onclick="sendEmail('{{ candidate.email }}', '{{ candidate.name }}', 'rejection', this)">
-                                <i class="fas fa-envelope me-1"></i>Send Rejection
-                            </button>
-                            <button class="btn btn-outline-info btn-sm" 
-                                onclick="checkAI('{{ candidate.resume_filename }}')">
-                                <i class="fas fa-search me-1"></i>AI Check
-                            </button>
-                        </div>
-                    </div>
+                </div>
+                
+                <!-- Card Footer Actions -->
+                <div class="bg-slate-50 p-6 flex gap-4 border-t border-slate-100">
+                    <button onclick="sendEmail('{{ candidate.email }}', '{{ candidate.name }}', 'congratulations', this)" 
+                        class="flex-1 inline-flex items-center justify-center px-6 py-4 bg-green-600 text-white rounded-2xl font-black hover:bg-green-700 transition-all shadow-lg active:scale-95">
+                        <i class="fas fa-paper-plane mr-2"></i>Congratulate
+                    </button>
+                    <button onclick="sendEmail('{{ candidate.email }}', '{{ candidate.name }}', 'rejection', this)" 
+                            class="inline-flex items-center justify-center px-6 py-4 bg-white border-2 border-red-100 text-red-600 rounded-2xl font-black hover:bg-red-50 transition-all active:scale-95">
+                        <i class="fas fa-times mr-2"></i>Reject
+                    </button>
                 </div>
             </div>
             {% endfor %}
@@ -512,374 +293,166 @@ body {
     </div>
     {% endif %}
 
+    <!-- Not Selected Candidates -->
     {% if not_selected %}
-    <div class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-danger mb-0">
-                <i class="fas fa-times-circle me-2"></i>Not Selected Candidates ({{ not_selected|length }})
-            </h2>
-            <button class="btn btn-outline-danger" onclick="sendAllRejections()">
-                <i class="fas fa-envelope me-2"></i>All Rejection
+    <div class="mt-20 animate-fade-in" style="animation-delay: 0.2s">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6 border-t border-slate-200 pt-16">
+            <div class="flex items-center space-x-4">
+                <div class="w-2 h-10 bg-red-400 rounded-full"></div>
+                <div>
+                    <h2 class="text-3xl font-black text-slate-900">Rejected Applications</h2>
+                    <p class="text-slate-500 font-medium">Candidates that didn't meet the target requirement</p>
+                </div>
+            </div>
+            <button onclick="sendAllRejections()" class="inline-flex items-center px-6 py-3 bg-red-50 text-red-700 rounded-2xl font-black hover:bg-red-100 transition-all group active:scale-95">
+                <i class="fas fa-trash-alt mr-2 group-hover:shake"></i>
+                Bulk Rejection Emails
             </button>
         </div>
-        <div class="row">
+
+        <div class="grid lg:grid-cols-2 gap-8 opacity-70 hover:opacity-100 transition-opacity">
             {% for candidate in not_selected %}
-            <div class="col-lg-6 mb-4">
-                <div class="card candidate-card h-100 not-selected-card">
-                    <div class="card-header d-flex justify-content-between align-items-start">
-                        <div>
-                            <h5 class="card-title mb-1">
-                                <i class="fas fa-user me-2"></i>{{ candidate.name }}
-                            </h5>
-                            <small class="text-muted">{{ candidate.resume_filename }}</small>
-                            <div class="mt-3">
-                                <small class="text-muted">Skills Checklist</small>
-                                <ul class="list-inline mt-2">
-                                    {% for s in candidate.skills %}
-                                    <li class="list-inline-item me-3 {% if s.is_hr_requirement %}hr-skill-highlight{% endif %}">
-                                        <i class="fas {{ 'fa-check-circle text-success' if s.match else 'fa-times-circle text-danger' }}"></i>
-                                        <span class="ms-1">{{ s.name }}</span>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
+            <div class="bg-white rounded-3xl border border-red-100 shadow-sm transition-all group not-selected-card overflow-hidden">
+                <div class="p-8">
+                    <div class="flex justify-between items-start">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-red-50 text-red-400 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-user-slash text-lg"></i>
                             </div>
-                            {% if candidate.missing_skills %}
-                            <div class="mt-2">
-                                <small class="text-muted">Missing skills:</small>
-                                {% for miss in candidate.missing_skills %}
-                                <span class="badge bg-danger text-white me-1">{{ miss }}</span>
-                                {% endfor %}
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800">{{ candidate.name }}</h3>
+                                <p class="text-xs font-bold text-slate-400 candidate-email-placeholder">{{ candidate.email or 'No email' }}</p>
                             </div>
-                            {% endif %}
                         </div>
-                        <div class="text-end">
-                            <span class="badge score-poor score-badge">{{ candidate.match_score }}%</span>
-                            {% if candidate.is_ai_generated %}
-                            <div class="mt-1">
-                                <span class="badge bg-warning text-dark">
-                                    <i class="fas fa-robot me-1"></i>AI Detected
-                                </span>
-                            </div>
-                            {% endif %}
+                        <div class="w-14 h-14 rounded-xl flex items-center justify-center text-center bg-red-600 text-white shadow-lg">
+                            <span class="text-xl font-black">{{ candidate.match_score }}%</span>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <!-- HR FLAGS SECTION -->
-                        {% if candidate.hr_flags and candidate.hr_flags|length > 0 %}
-                        <div class="hr-flags-alert" role="alert">
-                            <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>HR Requirement Alerts:</h6>
-                            <ul>
-                                {% for flag in candidate.hr_flags %}
-                                <li>{{ flag }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        {% endif %}
-                        
-                        <div class="row mb-3">
-                            <div class="col-sm-6">
-                                <small class="text-muted"><i class="fas fa-envelope me-2" style="color: #D44638;"></i>Email</small>
-                                <p class="mb-1 candidate-email-placeholder">{{ candidate.email or 'Not provided' }}</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <small class="text-muted"><i class="fas fa-phone me-2" style="color: #28a745;"></i>Phone</small>
-                                <p class="mb-1">{{ candidate.phone or 'Not provided' }}</p>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <small class="text-muted"><i class="fas fa-bullseye me-2" style="color: #6f42c1;"></i>Target Role</small>
-                            <p class="mb-1">
-                                <span class="badge bg-primary">{{ candidate.target_role }}</span>
-                            </p>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-6">
-                                <small class="text-muted"><i class="fas fa-business-time me-2" style="color: #fd7e14;"></i>Experience</small>
-                                <p class="mb-1">{{ candidate.experience }}</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <small class="text-muted"><i class="fas fa-graduation-cap me-2" style="color: #800000;"></i>Education</small>
-                                <p class="mb-1">{{ candidate.education.title() if candidate.education else 'Not specified' }}</p>
-                            </div>
-                        </div>
-                        {% if candidate.university %}
-                        <div class="mb-3">
-                            <small class="text-muted"><i class="fas fa-university me-2" style="color: #005A9C;"></i>University/College</small>
-                            <p class="mb-1">{{ candidate.university }}</p>
-                        </div>
-                        {% endif %}
-                        <div class="mb-3">
-                            <small class="text-muted"><i class="fas fa-certificate me-2" style="color: #ffc107;"></i>Certifications & Achievements</small>
-                            {% if candidate.certifications_and_achievements %}
-                            <ul class="list-unstyled">
-                                {% for cert in candidate.certifications_and_achievements %}
-                                <li>
-                                    <i class="fas fa-award me-1 text-success"></i>
-                                    {{ cert }}
-                                </li>
-                                {% endfor %}
-                            </ul>
-                            {% else %}
-                            <p class="mb-1">Not mentioned</p>
-                            {% endif %}
-                        </div>
-                        <div class="mb-3">
-                            <small class="text-muted"><i class="fab fa-github me-1 text-dark"></i> GitHub</small>
-                            {% if candidate.github_profiles %}
-                            <ul class="list-unstyled mb-1">
-                                {% for gh in candidate.github_profiles %}
-                                <li>
-                                    <a href="{{ gh.url }}" target="_blank">{{ gh.url }}</a>
-                                    <small class="text-muted">({{ gh.source }})</small>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                            {% else %}
-                            <p class="mb-1">Not mentioned</p>
-                            {% endif %}
-                        </div>
-                        <div class="mb-3">
-                            <small class="text-muted"><i class="fab fa-linkedin me-1 text-primary"></i> LinkedIn</small>
-                            {% if candidate.linkedin_profile %}
-                            <p class="mb-1">
-                                <a href="{{ candidate.linkedin_profile }}" target="_blank">{{ candidate.linkedin_profile }}</a>
-                            </p>
-                            {% else %}
-                            <p class="mb-1">Not mentioned</p>
-                            {% endif %}
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-6">
-                                <small class="text-muted"><i class="fas fa-user-tie me-2" style="color: #2F4F4F;"></i>Internship</small>
-                                <p class="mb-1">{{ 'Yes' if candidate.has_internship else 'No' }}</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <small class="text-muted"><i class="fas fa-laptop-code me-2" style="color: #0dcaf0;"></i>Hackathons</small>
-                                <p class="mb-1">{{ 'Yes' if candidate.has_hackathon else 'No' }}</p>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <small class="text-muted"><i class="fas fa-tasks me-2" style="color: #e83e8c;"></i>Projects</small>
-                            {% if candidate.projects %}
-                            <ul class="list-unstyled">
-                                {% for project in candidate.projects %}
-                                <li>
-                                    <i class="fas fa-code me-1 text-info"></i>
-                                    {{ project }}
-                                </li>
-                                {% endfor %}
-                            </ul>
-                            {% else %}
-                            <p class="mb-1">Not mentioned</p>
-                            {% endif %}
-                        </div>
-                        {% if candidate.is_ai_generated %}
-                        <div class="alert ai-warning py-2 mb-3">
-                            <small>
-                                <i class="fas fa-exclamation-triangle me-1"></i>
-                                This resume may contain AI-generated content. Review carefully.
-                            </small>
-                        </div>
-                        {% endif %}
+                    {% if candidate.hr_flags and candidate.hr_flags|length > 0 %}
+                    <div class="mt-6 flex items-start gap-3 bg-red-50 rounded-xl p-3 border border-red-100">
+                        <i class="fas fa-exclamation-circle text-red-400 mt-1"></i>
+                        <p class="text-[11px] font-bold text-red-900 leading-tight">
+                            <span class="uppercase opacity-50 block mb-1">Critical Failure Reason:</span>
+                            {{ candidate.hr_flags|first }}
+                        </p>
                     </div>
-                    <div class="card-footer">
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-danger email-btn" 
-                                onclick="sendEmail('{{ candidate.email }}', '{{ candidate.name }}', 'rejection', this)">
-                                <i class="fas fa-envelope me-1"></i>Send Rejection
-                            </button>
-                            <button class="btn btn-outline-info btn-sm" 
-                                onclick="checkAI('{{ candidate.resume_filename }}')">
-                                <i class="fas fa-search me-1"></i>AI Check
-                            </button>
-                        </div>
-                    </div>
+                    {% endif %}
+                </div>
+                <div class="px-8 pb-8">
+                    <button onclick="sendEmail('{{ candidate.email }}', '{{ candidate.name }}', 'rejection', this)" 
+                        class="w-full inline-flex items-center justify-center px-6 py-3 bg-slate-900 text-white rounded-2xl font-bold hover:bg-black transition-all active:scale-95">
+                        <i class="fas fa-envelope mr-2"></i>Send Final Notice
+                    </button>
                 </div>
             </div>
             {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not shortlisted and not not_selected %}
+    <div class="text-center py-32 bg-white rounded-[3rem] shadow-xl border-4 border-dashed border-slate-100">
+        <div class="w-32 h-32 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-10">
+            <i class="fas fa-magnifying-glass text-5xl"></i>
+        </div>
+        <h2 class="text-3xl font-black text-slate-900">Zero matches found</h2>
+        <p class="text-slate-500 max-w-lg mx-auto mt-4 text-xl font-medium leading-relaxed">The AI has analyzed all resumes but none crossed the scoring threshold for "{{ company_name }}".</p>
+        <div class="mt-12 flex justify-center gap-4">
+            <a href="/" class="inline-flex items-center px-10 py-5 bg-primary-600 text-white rounded-3xl font-black hover:bg-primary-700 transition-all shadow-2xl hover:shadow-primary-200 active:scale-95">
+                <i class="fas fa-redo mr-3"></i>New Analysis
+            </a>
         </div>
     </div>
     {% endif %}
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// 📧 Central Email Sending Function
-function sendEmail(email, name, type, button) {
-    if (!email || email === 'Not provided') {
-        showToast('No email address available for this candidate', 'warning');
-        return;
-    }
-
-    const originalText = button.innerHTML;
-    button.disabled = true;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Sending...';
-
-    fetch('/send_email', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: email, name: name, type: type })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            let msg = '';
-            if (type === 'congratulations') {
-                msg = `Congratulatory email sent to ${name}`;
-            } else if (type === 'rejection') {
-                msg = `Rejection email sent to ${name}`;
-            }
-            showToast(msg, 'success');
-            button.innerHTML = '<i class="fas fa-check me-1"></i>Sent';
-            button.classList.remove('btn-primary', 'btn-danger', 'btn-outline-danger', 'btn-outline-success');
-            if (type === 'congratulations') {
-                button.classList.add('btn-success');
-            } else {
-                button.classList.add('btn-danger');
-            }
-        } else {
-            showToast(`Failed to send email: ${data.message}`, 'danger');
-            button.disabled = false;
-            button.innerHTML = originalText;
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Error sending email', 'danger');
-        button.disabled = false;
-        button.innerHTML = originalText;
-    });
+function showToast(message, type = 'success') {
+    const container = document.querySelector('.toast-container');
+    const toast = document.createElement('div');
+    toast.className = `flex items-center p-5 text-white rounded-2xl shadow-2xl transition-all duration-500 translate-x-12 opacity-0 font-bold text-sm ${type === 'success' ? 'bg-emerald-600 border-b-4 border-emerald-800' : 'bg-rose-600 border-b-4 border-rose-800'}`;
+    toast.innerHTML = `
+        <div class="w-6 h-6 rounded-full bg-white/20 mr-4 flex items-center justify-center">
+            <i class="fas ${type === 'success' ? 'fa-check' : 'fa-exclamation'} text-[10px]"></i>
+        </div>
+        <span>${message}</span>
+    `;
+    container.appendChild(toast);
+    setTimeout(() => { toast.classList.remove('translate-x-12', 'opacity-0'); }, 10);
+    setTimeout(() => {
+        toast.classList.add('translate-x-12', 'opacity-0');
+        setTimeout(() => toast.remove(), 500);
+    }, 4500);
 }
 
-// 📧 Bulk Email Functions
-function sendAllRejections() {
-    const notSelectedCards = document.querySelectorAll('.not-selected-card');
-    const emails = [];
-    notSelectedCards.forEach(card => {
-        const emailElement = card.querySelector('.candidate-email-placeholder');
-        if (emailElement) {
-            const email = emailElement.textContent.trim();
-            if (email && email !== 'Not provided') {
-                emails.push(email);
-            }
-        }
-    });
-
-    if (emails.length === 0) {
-        showToast('No valid email addresses found to send rejections.', 'warning');
+function sendEmail(email, name, emailType, button) {
+    if (!email || email === 'Not provided' || email === 'No email') {
+        showToast("No valid email address detected for this candidate", "error");
         return;
     }
 
-    const button = document.querySelector('button[onclick="sendAllRejections()"]');
-    const originalText = button.innerHTML;
+    const originalHtml = button.innerHTML;
     button.disabled = true;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Sending All...';
+    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
 
-    fetch('/send_all_rejections', {
+    fetch('/send_candidate_email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ emails: emails })
+        body: JSON.stringify({ email: email, name: name, email_type: emailType })
     })
-    .then(response => response.json())
+    .then(r => r.json())
     .then(data => {
-        if (data.success) {
-            showToast(`Rejection emails sent successfully to ${data.sent_count} candidates!`, 'success');
-            button.innerHTML = '<i class="fas fa-check me-1"></i>All Sent';
+        if (data.status === 'success') {
+            showToast(`Success! Email dispatched to ${name}`, "success");
+            button.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Email Sent';
+            button.classList.add('!bg-slate-400', '!border-slate-500');
         } else {
-            showToast(`Failed to send all rejection emails: ${data.message}`, 'danger');
+            showToast("System error: " + data.message, "error");
+            button.innerHTML = originalHtml;
             button.disabled = false;
-            button.innerHTML = originalText;
         }
     })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Error sending all rejection emails', 'danger');
+    .catch(() => {
+        showToast("Network failure. Check your connection.", "error");
+        button.innerHTML = originalHtml;
         button.disabled = false;
-        button.innerHTML = originalText;
     });
 }
 
 function sendAllCongratulations() {
-    const shortlistedCards = document.querySelectorAll('.shortlisted-card');
-    const emails = [];
-    shortlistedCards.forEach(card => {
-        const emailElement = card.querySelector('.candidate-email-placeholder');
-        if (emailElement) {
-            const email = emailElement.textContent.trim();
-            if (email && email !== 'Not provided') {
-                emails.push(email);
-            }
+    const cards = document.querySelectorAll('.shortlisted-card');
+    let count = 0;
+    cards.forEach(card => {
+        const email = card.querySelector('.candidate-email-placeholder').innerText.trim();
+        const name = card.querySelector('h3').innerText.trim();
+        const btn = card.querySelector('button.bg-green-600');
+        if (email && email !== 'No email' && btn && !btn.disabled) {
+            sendEmail(email, name, 'congratulations', btn);
+            count++;
         }
     });
-
-    if (emails.length === 0) {
-        showToast('No valid email addresses found to send congratulations.', 'warning');
-        return;
-    }
-
-    const button = document.querySelector('button[onclick="sendAllCongratulations()"]');
-    const originalText = button.innerHTML;
-    button.disabled = true;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Sending All...';
-
-    fetch('/send_all_congratulations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ emails: emails })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showToast(`Congratulatory emails sent successfully to ${data.sent_count} candidates!`, 'success');
-            button.innerHTML = '<i class="fas fa-check me-1"></i>All Sent';
-        } else {
-            showToast(`Failed to send all congratulatory emails: ${data.message}`, 'danger');
-            button.disabled = false;
-            button.innerHTML = originalText;
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Error sending all congratulatory emails', 'danger');
-        button.disabled = false;
-        button.innerHTML = originalText;
-    });
+    if(count === 0) showToast("No eligible candidates left to email", "error");
 }
 
-// AI Check function
+function sendAllRejections() {
+    const cards = document.querySelectorAll('.not-selected-card');
+    let count = 0;
+    cards.forEach(card => {
+        const email = card.querySelector('.candidate-email-placeholder').innerText.trim();
+        const name = card.querySelector('h3').innerText.trim();
+        const btn = card.querySelector('button.bg-slate-900');
+        if (email && email !== 'No email' && btn && !btn.disabled) {
+            sendEmail(email, name, 'rejection', btn);
+            count++;
+        }
+    });
+    if(count === 0) showToast("All rejection emails already sent", "error");
+}
+
 function checkAI(filename) {
     window.open(`/ai_check/${encodeURIComponent(filename)}`, '_blank');
 }
-
-// 🔔 Toast notification helper function
-function showToast(message, type) {
-    const toastContainer = document.querySelector('.toast-container');
-    if (!toastContainer) return;
-
-    const toastId = 'toast-' + Date.now();
-    const toastHtml = `
-        <div class="toast align-items-center text-bg-${type} border-0" role="alert" id="${toastId}">
-            <div class="d-flex">
-                <div class="toast-body">
-                    ${message}
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-            </div>
-        </div>
-    `;
-
-    toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-
-    const toastElement = document.getElementById(toastId);
-    const toast = new bootstrap.Toast(toastElement, { delay: 4000 });
-    toast.show();
-
-    toastElement.addEventListener('hidden.bs.toast', () => {
-        toastElement.remove();
-    });
-}
 </script>
+
 </body>
 </html>
