@@ -417,56 +417,135 @@ def download_report(company_name):
         all_candidates = models.Candidate.query.filter_by(analysis_id=analysis_result.id).all()
         shortlisted = [c for c in all_candidates if c.is_shortlisted]
         not_selected = [c for c in all_candidates if not c.is_shortlisted]
+        
+        ai_generated_count = len([c for c in all_candidates if c.is_ai_generated])
+        human_written_count = len(all_candidates) - ai_generated_count
 
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter)
         styles = getSampleStyleSheet()
+        
+        # Define styles
+        title_style = styles['Title'].clone('CustomTitle')
+        title_style.textColor = colors.HexColor('#003366')
+        title_style.fontSize = 20
+        title_style.alignment = 1 # Center
+
+        h2_style = styles['h2'].clone('CustomH2')
+        h2_style.textColor = colors.HexColor('#003366')
+        
+        normal_style = styles['Normal']
+        
         flowables = []
 
-        flowables.append(Paragraph(f"<b>Complete Resume Analysis Report for {analysis_result.company_name}</b>", styles['Title']))
+        # Title
+        flowables.append(Paragraph("Resume Analysis Report", title_style))
         flowables.append(Spacer(1, 12))
-        flowables.append(Paragraph(f"<b>HR:</b> {analysis_result.hr_name} | <b>Date:</b> {analysis_result.created_at.strftime('%Y-%m-%d %H:%M:%S')}", styles['Normal']))
-        flowables.append(Paragraph(f"<b>Total Processed:</b> {analysis_result.total_processed}", styles['Normal']))
+
+        # Company Info Table
+        info_data = [
+            ["Company Name:", analysis_result.company_name],
+            ["HR Name:", analysis_result.hr_name],
+            ["HR Email:", analysis_result.hr_email],
+            ["Analysis Date:", analysis_result.created_at.strftime('%Y-%m-%d %H:%M:%S')]
+        ]
+        info_table = Table(info_data, colWidths=[2*inch, 4*inch])
+        info_table.setStyle(TableStyle([
+            ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+            ('BACKGROUND', (0,0), (0,-1), colors.whitesmoke),
+            ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
+            ('PADDING', (0,0), (-1,-1), 6)
+        ]))
+        flowables.append(info_table)
         flowables.append(Spacer(1, 24))
 
-        # Shortlisted table
-        flowables.append(Paragraph("<b><u>Shortlisted Candidates</u></b>", styles['h2']))
-        flowables.append(Spacer(1, 12))
+        # Summary Statistics
+        flowables.append(Paragraph("Summary Statistics", h2_style))
+        flowables.append(Spacer(1, 6))
+        stats_data = [
+            ["Total Resumes Processed:", str(analysis_result.total_processed)],
+            ["Shortlisted Candidates:", str(len(shortlisted))],
+            ["Not Selected:", str(len(not_selected))]
+        ]
+        stats_table = Table(stats_data, colWidths=[3*inch, 3*inch])
+        stats_table.setStyle(TableStyle([
+            ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+            ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#E6F2FF')),
+            ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
+            ('PADDING', (0,0), (-1,-1), 6)
+        ]))
+        flowables.append(stats_table)
+        flowables.append(Spacer(1, 24))
+
+        # Candidate Table Style
+        candidate_table_style = TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#8B0000')),
+            ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+            ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.whitesmoke]),
+            ('PADDING', (0,0), (-1,-1), 6)
+        ])
+
+        # Shortlisted candidates
+        flowables.append(Paragraph("Shortlisted Candidates", h2_style))
+        flowables.append(Spacer(1, 6))
         if shortlisted:
-            data = [['S.No.', 'Name', 'Match Score', 'Experience', 'Education', 'AI Detected', 'Email Sent']]
-            for i, c in enumerate(shortlisted, 1):
-                email_status = "Yes" if (c.email_sent and c.sent_on) else "No"
-                data.append([str(i), Paragraph(c.name or "N/A", styles['Normal']),
-                              f"{c.match_score}%", f"{c.experience_years} years",
-                              c.education or "N/A", "Yes" if c.is_ai_generated else "No",
-                              email_status])
-            table = Table(data, colWidths=[0.5*inch, 1.5*inch, 0.75*inch, 1*inch, 1.75*inch, 0.75*inch, 0.75*inch])
-            table.setStyle(TableStyle([('GRID', (0,0), (-1,-1), 1, colors.black), ('ALIGN',(0,0),(-1,-1),'CENTER')]))
-            flowables.append(table)
+            candidates_data = [['Name', 'Email', 'Score', 'Education']]
+            for c in shortlisted:
+                candidates_data.append([
+                    Paragraph(c.name or "N/A", normal_style),
+                    Paragraph(c.email or "N/A", normal_style),
+                    f"{c.match_score}%",
+                    Paragraph(c.education or "N/A", normal_style)
+                ])
+            cand_table = Table(candidates_data, colWidths=[2*inch, 2*inch, 1*inch, 2*inch])
+            cand_table.setStyle(candidate_table_style)
+            flowables.append(cand_table)
         else:
             flowables.append(Paragraph("<i>No candidates shortlisted.</i>", styles['Italic']))
-        flowables.append(Spacer(1, 48))
+        flowables.append(Spacer(1, 24))
 
-        # Not selected table
-        flowables.append(Paragraph("<b><u>Not Selected Candidates</u></b>", styles['h2']))
-        flowables.append(Spacer(1, 12))
+        # Not Selected candidates
+        flowables.append(Paragraph("Not Selected Candidates", h2_style))
+        flowables.append(Spacer(1, 6))
         if not_selected:
-            data = [['S.No.', 'Name', 'Match Score', 'Experience', 'Education', 'AI Detected', 'Email Sent']]
-            for i, c in enumerate(not_selected, 1):
-                email_status = "Yes" if (c.email_sent and c.sent_on) else "No"
-                data.append([str(i), Paragraph(c.name or "N/A", styles['Normal']),
-                              f"{c.match_score}%", f"{c.experience_years} years",
-                              c.education or "N/A", "Yes" if c.is_ai_generated else "No",
-                              email_status])
-            table = Table(data, colWidths=[0.5*inch, 1.5*inch, 0.75*inch, 1*inch, 1.75*inch, 0.75*inch, 0.75*inch])
-            table.setStyle(TableStyle([('GRID', (0,0), (-1,-1), 1, colors.black), ('ALIGN',(0,0),(-1,-1),'CENTER')]))
-            flowables.append(table)
+            not_selected_data = [['Name', 'Email', 'Score', 'Education']]
+            for c in not_selected:
+                not_selected_data.append([
+                    Paragraph(c.name or "N/A", normal_style),
+                    Paragraph(c.email or "N/A", normal_style),
+                    f"{c.match_score}%",
+                    Paragraph(c.education or "N/A", normal_style)
+                ])
+            ns_table = Table(not_selected_data, colWidths=[2*inch, 2*inch, 1*inch, 2*inch])
+            ns_table.setStyle(candidate_table_style)
+            flowables.append(ns_table)
         else:
-            flowables.append(Paragraph("<i>All candidates shortlisted.</i>", styles['Italic']))
+            flowables.append(Paragraph("<i>All candidates were shortlisted!</i>", styles['Italic']))
+        flowables.append(Spacer(1, 24))
+
+        # AI Detection Summary
+        flowables.append(Paragraph("AI Detection Summary", h2_style))
+        flowables.append(Spacer(1, 6))
+        ai_data = [
+            ["Total Candidates Analyzed:", str(len(all_candidates))],
+            ["AI-Generated Resumes Detected:", str(ai_generated_count)],
+            ["Human-Written Resumes:", str(human_written_count)]
+        ]
+        ai_table = Table(ai_data, colWidths=[3*inch, 3*inch])
+        ai_table.setStyle(TableStyle([
+            ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+            ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#FFF2CC')),
+            ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
+            ('PADDING', (0,0), (-1,-1), 6)
+        ]))
+        flowables.append(ai_table)
 
         doc.build(flowables)
         buffer.seek(0)
-        return send_file(buffer, as_attachment=True, download_name=f"{company_name}_full_report.pdf", mimetype='application/pdf')
+        return send_file(buffer, as_attachment=True, download_name=f"{company_name}_analysis_report.pdf", mimetype='application/pdf')
     except Exception as e:
         logging.exception(f"Error creating PDF: {e}")
         flash(f'Error creating PDF: {str(e)}', 'error')
@@ -481,34 +560,77 @@ def download_all_selected(company_name):
             flash('No analysis results found for download.', 'error')
             return redirect(url_for('index'))
 
-        # Only shortlisted whose emails were sent (and recorded with timestamp)
+        # Only shortlisted whose emails were sent
         selected_candidates = models.Candidate.query.filter_by(
             analysis_id=analysis_result.id, is_shortlisted=True, email_sent=True
         ).filter(models.Candidate.sent_on.isnot(None)).all()
 
         if not selected_candidates:
-            flash('No shortlisted candidates have been sent an email yet. Please send emails first.', 'warning')
+            flash('No shortlisted candidates have been sent an email yet.', 'warning')
             return redirect(url_for('index'))
 
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter)
         styles = getSampleStyleSheet()
+        
+        # Define styles
+        title_style = styles['Title'].clone('CustomTitle')
+        title_style.textColor = colors.HexColor('#003366')
+        title_style.fontSize = 20
+        title_style.alignment = 1
+
+        h2_style = styles['h2'].clone('CustomH2')
+        h2_style.textColor = colors.HexColor('#003366')
+        
+        normal_style = styles['Normal']
+        
         flowables = []
 
-        flowables.append(Paragraph(f"<b>Selected Candidates Report for {analysis_result.company_name}</b>", styles['Title']))
+        # Title
+        flowables.append(Paragraph("Selected Candidates Report", title_style))
         flowables.append(Spacer(1, 12))
-        flowables.append(Paragraph(f"<b>HR:</b> {analysis_result.hr_name} | <b>Date:</b> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", styles['Normal']))
-        flowables.append(Paragraph(f"<b>Total Selected:</b> {len(selected_candidates)}", styles['Normal']))
+
+        # Company Info Table
+        info_data = [
+            ["Company Name:", analysis_result.company_name],
+            ["HR Name:", analysis_result.hr_name],
+            ["Date:", datetime.now().strftime('%Y-%m-%d %H:%M:%S')]
+        ]
+        info_table = Table(info_data, colWidths=[2*inch, 4*inch])
+        info_table.setStyle(TableStyle([
+            ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+            ('BACKGROUND', (0,0), (0,-1), colors.whitesmoke),
+            ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
+            ('PADDING', (0,0), (-1,-1), 6)
+        ]))
+        flowables.append(info_table)
         flowables.append(Spacer(1, 24))
 
-        data = [['S.No.', 'Name', 'Match Score', 'Experience', 'Education', 'AI Detected', 'Email Sent On']]
-        for i, c in enumerate(selected_candidates, 1):
+        # Selected Table
+        flowables.append(Paragraph("Selected Candidates (Email Sent)", h2_style))
+        flowables.append(Spacer(1, 6))
+        
+        data = [['Name', 'Email', 'Score', 'Education', 'Sent On']]
+        for c in selected_candidates:
             sent_date = c.sent_on.strftime("%Y-%m-%d %H:%M") if c.sent_on else "N/A"
-            data.append([str(i), Paragraph(c.name or "N/A", styles['Normal']),
-                          f"{c.match_score}%", f"{c.experience_years} years",
-                          c.education or "N/A", "Yes" if c.is_ai_generated else "No", sent_date])
-        table = Table(data, colWidths=[0.5*inch, 1.5*inch, 0.75*inch, 1*inch, 1.75*inch, 0.75*inch, 1.25*inch])
-        table.setStyle(TableStyle([('GRID', (0,0), (-1,-1), 1, colors.black), ('ALIGN',(0,0),(-1,-1),'CENTER')]))
+            data.append([
+                Paragraph(c.name or "N/A", normal_style),
+                Paragraph(c.email or "N/A", normal_style),
+                f"{c.match_score}%",
+                Paragraph(c.education or "N/A", normal_style),
+                sent_date
+            ])
+            
+        table = Table(data, colWidths=[1.5*inch, 1.5*inch, 0.75*inch, 1.75*inch, 1*inch])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#8B0000')),
+            ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+            ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.whitesmoke]),
+            ('PADDING', (0,0), (-1,-1), 6)
+        ]))
         flowables.append(table)
 
         doc.build(flowables)
