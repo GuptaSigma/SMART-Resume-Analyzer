@@ -111,9 +111,37 @@
         .landing-hero {
             background: linear-gradient(135deg, #1e3a8a, var(--primary-blue), var(--light-blue));
             color: var(--white);
-            padding: 100px 20px 130px;
-            text-align: center;
+            padding: 84px 20px 130px;
             clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+        }
+
+        .landing-hero-shell {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .landing-hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(280px, 420px);
+            gap: 48px;
+            align-items: center;
+        }
+
+        .landing-hero-copy {
+            text-align: left;
+        }
+
+        .landing-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            margin-bottom: 18px;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
         .landing-hero h1 {
@@ -126,9 +154,175 @@
         .landing-hero p {
             font-size: 18px;
             max-width: 760px;
-            margin: 0 auto 30px;
+            margin: 0 0 30px;
             opacity: 0.92;
             animation: fadeInUp 1s ease;
+        }
+
+        .landing-hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 26px;
+        }
+
+        .landing-secondary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 24px;
+            border-radius: 999px;
+            text-decoration: none;
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.32);
+            background: rgba(255, 255, 255, 0.08);
+            font-weight: 600;
+        }
+
+        .landing-secondary-btn:hover,
+        .landing-secondary-btn:focus-visible {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            max-width: 640px;
+        }
+
+        .hero-stat {
+            padding: 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(12px);
+        }
+
+        .hero-stat strong {
+            display: block;
+            font-size: 1.35rem;
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+
+        .hero-stat span {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .hero-preview-card {
+            position: relative;
+            padding: 26px;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 24px 50px rgba(15, 23, 42, 0.18);
+            min-height: 360px;
+        }
+
+        .hero-preview-glow {
+            position: absolute;
+            inset: auto 22px 22px auto;
+            width: 110px;
+            height: 110px;
+            background: rgba(255, 255, 255, 0.12);
+            filter: blur(18px);
+            border-radius: 999px;
+        }
+
+        .hero-preview-window {
+            position: relative;
+            background: rgba(255, 255, 255, 0.96);
+            color: #1f2937;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 16px 28px rgba(37, 99, 235, 0.15);
+        }
+
+        .hero-preview-topbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 16px;
+            background: #dbeafe;
+        }
+
+        .hero-preview-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: #60a5fa;
+        }
+
+        .hero-preview-body {
+            padding: 20px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .hero-preview-pill-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .hero-preview-pill {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .hero-preview-score {
+            display: grid;
+            grid-template-columns: 96px 1fr;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .hero-preview-ring {
+            width: 96px;
+            height: 96px;
+            border-radius: 999px;
+            background: conic-gradient(#2563eb 0 79%, #dbeafe 79% 100%);
+            display: grid;
+            place-items: center;
+        }
+
+        .hero-preview-ring::before {
+            content: "79%";
+            width: 70px;
+            height: 70px;
+            border-radius: 999px;
+            display: grid;
+            place-items: center;
+            background: white;
+            color: #1d4ed8;
+            font-weight: 700;
+        }
+
+        .hero-preview-list {
+            display: grid;
+            gap: 10px;
+            color: #475569;
+            font-size: 0.92rem;
+        }
+
+        .hero-preview-list div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .hero-preview-list span:last-child {
+            color: #0f172a;
+            font-weight: 600;
         }
 
         .landing-hero-btn {
@@ -443,12 +637,36 @@
                 clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
             }
 
+            .landing-hero-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+
+            .landing-hero-copy {
+                text-align: center;
+            }
+
             .landing-hero h1 {
                 font-size: 36px;
             }
 
             .landing-hero p {
                 font-size: 16px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .landing-hero-actions {
+                justify-content: center;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+                max-width: 100%;
+            }
+
+            .hero-preview-card {
+                min-height: auto;
             }
 
             .landing-section {
@@ -489,12 +707,18 @@
             }
 
             .landing-nav-btn,
-            .landing-hero-btn {
+            .landing-hero-btn,
+            .landing-secondary-btn {
                 width: 100%;
             }
 
             .landing-hero h1 {
                 font-size: 30px;
+            }
+
+            .landing-kicker {
+                width: 100%;
+                justify-content: center;
             }
 
             .landing-section-title {
@@ -524,9 +748,65 @@
 
     <main>
         <header class="landing-hero">
-            <h1>Hire Smarter, Faster, Fairer</h1>
-            <p>Smart-Hire is an intelligent hiring platform designed to streamline recruitment by matching the right candidates with the right roles. Zero-touch recruitment automation that saves 15+ hours per hiring cycle.</p>
-            <a href="#resume-analyzer-section" class="landing-hero-btn">Start Analyzing Resumes <i class="fa-solid fa-arrow-right"></i></a>
+            <div class="landing-hero-shell">
+                <div class="landing-hero-grid">
+                    <div class="landing-hero-copy">
+                        <div class="landing-kicker">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            AI-powered recruitment automation
+                        </div>
+                        <h1>Hire Smarter, Faster, Fairer</h1>
+                        <p>Smart-Hire is an intelligent hiring platform designed to streamline recruitment by matching the right candidates with the right roles. Zero-touch recruitment automation that saves 15+ hours per hiring cycle.</p>
+                        <div class="landing-hero-actions">
+                            <a href="#resume-analyzer-section" class="landing-hero-btn">Start Analyzing Resumes <i class="fa-solid fa-arrow-right"></i></a>
+                            <a href="#resume-analyzer-section" class="landing-secondary-btn">Go to Dashboard</a>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="hero-stat">
+                                <strong>15+ hrs</strong>
+                                <span>saved per hiring cycle</span>
+                            </div>
+                            <div class="hero-stat">
+                                <strong>AI Check</strong>
+                                <span>detect generated resumes</span>
+                            </div>
+                            <div class="hero-stat">
+                                <strong>Smart Match</strong>
+                                <span>rank candidates instantly</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-preview-card">
+                        <div class="hero-preview-glow"></div>
+                        <div class="hero-preview-window">
+                            <div class="hero-preview-topbar">
+                                <span class="hero-preview-dot"></span>
+                                <span class="hero-preview-dot"></span>
+                                <span class="hero-preview-dot"></span>
+                            </div>
+                            <div class="hero-preview-body">
+                                <div>
+                                    <p class="text-sm uppercase tracking-[0.24em] text-slate-400 mb-2">Candidate Snapshot</p>
+                                    <h3 class="text-2xl font-bold text-slate-900">Smart Screening Overview</h3>
+                                </div>
+                                <div class="hero-preview-pill-row">
+                                    <span class="hero-preview-pill">AI Detection</span>
+                                    <span class="hero-preview-pill">JD Match</span>
+                                    <span class="hero-preview-pill">Email Ready</span>
+                                </div>
+                                <div class="hero-preview-score">
+                                    <div class="hero-preview-ring"></div>
+                                    <div class="hero-preview-list">
+                                        <div><span>Match Score</span><span>Excellent</span></div>
+                                        <div><span>Skill Coverage</span><span>11 of 14</span></div>
+                                        <div><span>Resume Authenticity</span><span>Verified</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </header>
 
         <section class="landing-section">
