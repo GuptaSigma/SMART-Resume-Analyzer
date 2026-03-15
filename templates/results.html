@@ -346,11 +346,11 @@ body {
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom">
     <div class="container">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
             <i class="fas fa-brain me-2"></i>SmartHire.AI
         </a>
         <div class="navbar-nav ms-auto">
-            <a class="nav-link" href="/">
+            <a class="nav-link" href="{{ url_for('index') }}">
                 <i class="fas fa-arrow-left me-2"></i>New Analysis
             </a>
         </div>

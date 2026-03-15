@@ -11,881 +11,596 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script>
         tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            200: '#bfdbfe',
-                            300: '#93c5fd',
-                            400: '#60a5fa',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            800: '#1e40af',
-                            900: '#1e3a8a',
+            <!DOCTYPE html>
+            <html lang="en" data-bs-theme="light">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>SmartHire.AI | Resume Analyzer Dashboard</title>
+                <script src="https://cdn.tailwindcss.com"></script>
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+                <script>
+                    tailwind.config = {
+                        theme: {
+                            extend: {
+                                colors: {
+                                    primary: {
+                                        50: '#eff6ff',
+                                        100: '#dbeafe',
+                                        200: '#bfdbfe',
+                                        300: '#93c5fd',
+                                        400: '#60a5fa',
+                                        500: '#3b82f6',
+                                        600: '#2563eb',
+                                        700: '#1d4ed8',
+                                        800: '#1e40af',
+                                        900: '#1e3a8a',
+                                    },
+                                },
+                            },
                         },
-                    },
-                },
-            },
-        }
-    </script>
-    <style>
-        :root {
-            --primary-blue: #2563eb;
-            --light-blue: #3b82f6;
-            --bg-color: #f5f7fb;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-            --white: #ffffff;
-            --border-soft: #dbe4f4;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            margin: 0;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            line-height: 1.6;
-            font-family: 'Poppins', sans-serif;
-            overflow-x: hidden;
-        }
-
-        .landing-nav {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 50px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(18px);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .landing-logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-blue);
-            text-decoration: none;
-        }
-
-        .landing-logo span {
-            color: var(--text-light);
-        }
-
-        .landing-nav-btn,
-        .landing-hero-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.65rem;
-            text-decoration: none;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-            font-weight: 600;
-        }
-
-        .landing-nav-btn {
-            background: var(--primary-blue);
-            color: var(--white);
-            padding: 10px 20px;
-            border-radius: 8px;
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.18);
-        }
-
-        .landing-nav-btn:hover,
-        .landing-nav-btn:focus-visible {
-            background: var(--light-blue);
-            transform: translateY(-2px);
-        }
-
-        .landing-hero {
-            background: linear-gradient(135deg, #1e3a8a, var(--primary-blue), var(--light-blue));
-            color: var(--white);
-            padding: 84px 20px 130px;
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-        }
-
-        .landing-hero-shell {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .landing-hero-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1.15fr) minmax(280px, 420px);
-            gap: 48px;
-            align-items: center;
-        }
-
-        .landing-hero-copy {
-            text-align: left;
-        }
-
-        .landing-kicker {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 14px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.14);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            margin-bottom: 18px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .landing-hero h1 {
-            font-size: 52px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            animation: fadeInDown 1s ease;
-        }
-
-        .landing-hero p {
-            font-size: 18px;
-            max-width: 760px;
-            margin: 0 0 30px;
-            opacity: 0.92;
-            animation: fadeInUp 1s ease;
-        }
-
-        .landing-hero-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-            margin-bottom: 26px;
-        }
-
-        .landing-secondary-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 14px 24px;
-            border-radius: 999px;
-            text-decoration: none;
-            color: var(--white);
-            border: 1px solid rgba(255, 255, 255, 0.32);
-            background: rgba(255, 255, 255, 0.08);
-            font-weight: 600;
-        }
-
-        .landing-secondary-btn:hover,
-        .landing-secondary-btn:focus-visible {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .hero-stats {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 14px;
-            max-width: 640px;
-        }
-
-        .hero-stat {
-            padding: 16px;
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            backdrop-filter: blur(12px);
-        }
-
-        .hero-stat strong {
-            display: block;
-            font-size: 1.35rem;
-            line-height: 1.1;
-            margin-bottom: 4px;
-        }
-
-        .hero-stat span {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        .hero-preview-card {
-            position: relative;
-            padding: 26px;
-            border-radius: 28px;
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            backdrop-filter: blur(18px);
-            box-shadow: 0 24px 50px rgba(15, 23, 42, 0.18);
-            min-height: 360px;
-        }
-
-        .hero-preview-glow {
-            position: absolute;
-            inset: auto 22px 22px auto;
-            width: 110px;
-            height: 110px;
-            background: rgba(255, 255, 255, 0.12);
-            filter: blur(18px);
-            border-radius: 999px;
-        }
-
-        .hero-preview-window {
-            position: relative;
-            background: rgba(255, 255, 255, 0.96);
-            color: #1f2937;
-            border-radius: 22px;
-            overflow: hidden;
-            box-shadow: 0 16px 28px rgba(37, 99, 235, 0.15);
-        }
-
-        .hero-preview-topbar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 16px;
-            background: #dbeafe;
-        }
-
-        .hero-preview-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-            background: #60a5fa;
-        }
-
-        .hero-preview-body {
-            padding: 20px;
-            display: grid;
-            gap: 16px;
-        }
-
-        .hero-preview-pill-row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .hero-preview-pill {
-            padding: 8px 12px;
-            border-radius: 999px;
-            background: #eff6ff;
-            color: #1d4ed8;
-            font-size: 0.78rem;
-            font-weight: 600;
-        }
-
-        .hero-preview-score {
-            display: grid;
-            grid-template-columns: 96px 1fr;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .hero-preview-ring {
-            width: 96px;
-            height: 96px;
-            border-radius: 999px;
-            background: conic-gradient(#2563eb 0 79%, #dbeafe 79% 100%);
-            display: grid;
-            place-items: center;
-        }
-
-        .hero-preview-ring::before {
-            content: "79%";
-            width: 70px;
-            height: 70px;
-            border-radius: 999px;
-            display: grid;
-            place-items: center;
-            background: white;
-            color: #1d4ed8;
-            font-weight: 700;
-        }
-
-        .hero-preview-list {
-            display: grid;
-            gap: 10px;
-            color: #475569;
-            font-size: 0.92rem;
-        }
-
-        .hero-preview-list div {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .hero-preview-list span:last-child {
-            color: #0f172a;
-            font-weight: 600;
-        }
-
-        .landing-hero-btn {
-            background: var(--white);
-            color: var(--primary-blue);
-            padding: 15px 35px;
-            font-size: 18px;
-            font-weight: 700;
-            border-radius: 999px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .landing-hero-btn:hover,
-        .landing-hero-btn:focus-visible {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .landing-section {
-            padding: 80px 20px;
-            max-width: 1200px;
-            margin: auto;
-            text-align: center;
-        }
-
-        .landing-section-title {
-            font-size: 36px;
-            color: var(--text-dark);
-            margin-bottom: 50px;
-            font-weight: 700;
-        }
-
-        .vs-container {
-            display: flex;
-            gap: 30px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .vs-box {
-            background: var(--white);
-            padding: 40px;
-            border-radius: 18px;
-            flex: 1;
-            min-width: 300px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            text-align: left;
-        }
-
-        .vs-box h3 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .problem h3 {
-            color: #ef4444;
-        }
-
-        .solution h3 {
-            color: #10b981;
-        }
-
-        .vs-box ul {
-            list-style: none;
-            color: var(--text-light);
-            padding: 0;
-            margin: 0;
-        }
-
-        .vs-box ul li {
-            margin-bottom: 15px;
-            position: relative;
-            padding-left: 28px;
-        }
-
-        .problem ul li::before {
-            content: "x";
-            color: #ef4444;
-            font-weight: 700;
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-
-        .solution ul li::before {
-            content: "\f00c";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            color: #10b981;
-            position: absolute;
-            left: 0;
-            top: 2px;
-            font-size: 0.9rem;
-        }
-
-        .landing-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-
-        .landing-card {
-            background: var(--white);
-            padding: 30px 20px;
-            border-radius: 16px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-            border-bottom: 4px solid transparent;
-        }
-
-        .landing-card:hover {
-            transform: translateY(-10px);
-            border-bottom: 4px solid var(--primary-blue);
-        }
-
-        .landing-card i {
-            font-size: 40px;
-            color: var(--primary-blue);
-            margin-bottom: 20px;
-        }
-
-        .landing-card h3 {
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
-
-        .landing-card p {
-            color: var(--text-light);
-            font-size: 14px;
-        }
-
-        .tech-bg {
-            background: var(--white);
-            padding: 60px 20px;
-            border-radius: 24px;
-            margin: 40px auto 20px;
-            max-width: 1000px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        }
-
-        .tech-subtitle {
-            color: var(--text-light);
-        }
-
-        .badges {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-        }
-
-        .badge-pill {
-            background: #eef2ff;
-            color: var(--primary-blue);
-            padding: 10px 20px;
-            border-radius: 999px;
-            font-weight: 600;
-            font-size: 14px;
-            border: 1px solid #c7d2fe;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .resume-analyzer-section {
-            padding: 40px 16px 80px;
-        }
-
-        .upload-page-shell {
-            width: min(100%, 1120px);
-            margin-inline: auto;
-        }
-
-        .form-shell {
-            width: min(100%, 1120px);
-            margin-inline: auto;
-        }
-
-        .analyzer-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .analyzer-header h2 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .analyzer-header p {
-            max-width: 760px;
-            margin: 0.75rem auto 0;
-            color: var(--text-light);
-        }
-
-        .flash-shell {
-            width: min(100%, 1120px);
-            margin: 0 auto 1.5rem;
-        }
-
-        .flash-message {
-            padding: 14px 18px;
-            border-radius: 14px;
-            margin-bottom: 12px;
-            font-size: 0.95rem;
-            border: 1px solid transparent;
-        }
-
-        .flash-message.error {
-            background: #fef2f2;
-            color: #b91c1c;
-            border-color: #fecaca;
-        }
-
-        .flash-message.warning {
-            background: #fffbeb;
-            color: #92400e;
-            border-color: #fde68a;
-        }
-
-        .flash-message.success {
-            background: #ecfdf5;
-            color: #047857;
-            border-color: #a7f3d0;
-        }
-
-        .glass-card {
-            background: var(--white);
-            border-radius: 22px;
-            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
-            border: 1px solid var(--border-soft);
-            overflow: hidden;
-        }
-
-        .section-band {
-            background: linear-gradient(135deg, #1e40af, #2563eb);
-            color: var(--white);
-            padding: 18px 24px;
-        }
-
-        .file-drop-zone.dragover {
-            background-color: rgba(59, 130, 246, 0.1);
-            border-color: #2563eb;
-            transform: scale(1.02);
-        }
-
-        #fileList::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        #fileList::-webkit-scrollbar-track {
-            background: #f1f9ff;
-            border-radius: 10px;
-        }
-
-        #fileList::-webkit-scrollbar-thumb {
-            background: #93c5fd;
-            border-radius: 10px;
-        }
-
-        #fileList::-webkit-scrollbar-thumb:hover {
-            background: #60a5fa;
-        }
-
-        .landing-footer {
-            background: #111827;
-            color: var(--white);
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .landing-footer p {
-            opacity: 0.75;
-            margin-top: 0.5rem;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .landing-nav {
-                padding: 16px 18px;
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .landing-hero {
-                padding: 80px 18px 110px;
-                clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
-            }
-
-            .landing-hero-grid {
-                grid-template-columns: 1fr;
-                gap: 28px;
-            }
-
-            .landing-hero-copy {
-                text-align: center;
-            }
-
-            .landing-hero h1 {
-                font-size: 36px;
-            }
-
-            .landing-hero p {
-                font-size: 16px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            .landing-hero-actions {
-                justify-content: center;
-            }
-
-            .hero-stats {
-                grid-template-columns: 1fr;
-                max-width: 100%;
-            }
-
-            .hero-preview-card {
-                min-height: auto;
-            }
-
-            .landing-section {
-                padding: 64px 18px;
-            }
-
-            .landing-section-title {
-                font-size: 30px;
-                margin-bottom: 34px;
-            }
-
-            .vs-container {
-                flex-direction: column;
-            }
-
-            .vs-box {
-                min-width: 100%;
-                padding: 28px 22px;
-            }
-
-            .resume-analyzer-section {
-                padding: 24px 12px 64px;
-            }
-
-            .form-shell .p-6 {
-                padding: 1rem !important;
-            }
-
-            #submitBtn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .landing-logo {
-                font-size: 21px;
-            }
-
-            .landing-nav-btn,
-            .landing-hero-btn,
-            .landing-secondary-btn {
-                width: 100%;
-            }
-
-            .landing-hero h1 {
-                font-size: 30px;
-            }
-
-            .landing-kicker {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .landing-section-title {
-                font-size: 26px;
-            }
-
-            .badges {
-                gap: 10px;
-            }
-
-            .badge-pill {
-                font-size: 13px;
-                padding: 9px 14px;
-            }
-
-            .analyzer-header h2 {
-                font-size: 1.6rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <nav class="landing-nav">
-        <a class="landing-logo" href="{{ url_for('index') }}">SmartHire<span>.AI</span></a>
-        <a href="#resume-analyzer-section" class="landing-nav-btn">Go to Dashboard</a>
-    </nav>
-
-    <main>
-        <header class="landing-hero">
-            <div class="landing-hero-shell">
-                <div class="landing-hero-grid">
-                    <div class="landing-hero-copy">
-                        <div class="landing-kicker">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            AI-powered recruitment automation
-                        </div>
-                        <h1>Hire Smarter, Faster, Fairer</h1>
-                        <p>Smart-Hire is an intelligent hiring platform designed to streamline recruitment by matching the right candidates with the right roles. Zero-touch recruitment automation that saves 15+ hours per hiring cycle.</p>
-                        <div class="landing-hero-actions">
-                            <a href="#resume-analyzer-section" class="landing-hero-btn">Start Analyzing Resumes <i class="fa-solid fa-arrow-right"></i></a>
-                            <a href="#resume-analyzer-section" class="landing-secondary-btn">Go to Dashboard</a>
-                        </div>
-                        <div class="hero-stats">
-                            <div class="hero-stat">
-                                <strong>15+ hrs</strong>
-                                <span>saved per hiring cycle</span>
+                    }
+                </script>
+                <style>
+                    :root {
+                        --primary-blue: #2563eb;
+                        --light-blue: #3b82f6;
+                        --bg-color: #f5f7fb;
+                        --text-dark: #1f2937;
+                        --text-light: #6b7280;
+                        --white: #ffffff;
+                        --border-soft: #dbe4f4;
+                    }
+
+                    * {
+                        box-sizing: border-box;
+                    }
+
+                    body {
+                        margin: 0;
+                        background-color: var(--bg-color);
+                        color: var(--text-dark);
+                        line-height: 1.6;
+                        font-family: 'Poppins', sans-serif;
+                        overflow-x: hidden;
+                    }
+
+                    .dashboard-nav {
+                        position: sticky;
+                        top: 0;
+                        z-index: 1000;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 18px 28px;
+                        background: rgba(255, 255, 255, 0.92);
+                        backdrop-filter: blur(18px);
+                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                    }
+
+                    .dashboard-logo {
+                        font-size: 24px;
+                        font-weight: 700;
+                        color: var(--primary-blue);
+                        text-decoration: none;
+                    }
+
+                    .dashboard-logo span {
+                        color: var(--text-light);
+                    }
+
+                    .dashboard-home-btn {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 8px;
+                        background: var(--primary-blue);
+                        color: var(--white);
+                        padding: 10px 18px;
+                        border-radius: 10px;
+                        text-decoration: none;
+                        font-weight: 600;
+                    }
+
+                    .dashboard-home-btn:hover,
+                    .dashboard-home-btn:focus-visible {
+                        background: var(--light-blue);
+                    }
+
+                    .dashboard-shell {
+                        width: min(100%, 1120px);
+                        margin: 0 auto;
+                        padding: 28px 16px 80px;
+                    }
+
+                    .dashboard-hero {
+                        background: linear-gradient(135deg, #1e40af, #2563eb, #3b82f6);
+                        color: var(--white);
+                        border-radius: 28px;
+                        padding: 34px 28px;
+                        margin-bottom: 24px;
+                        box-shadow: 0 20px 45px rgba(37, 99, 235, 0.18);
+                    }
+
+                    .dashboard-hero-grid {
+                        display: grid;
+                        grid-template-columns: minmax(0, 1fr) 240px;
+                        gap: 24px;
+                        align-items: center;
+                    }
+
+                    .dashboard-hero h1 {
+                        font-size: 2.3rem;
+                        line-height: 1.15;
+                        margin-bottom: 12px;
+                        font-weight: 700;
+                    }
+
+                    .dashboard-hero p {
+                        max-width: 700px;
+                        color: rgba(255, 255, 255, 0.92);
+                    }
+
+                    .dashboard-pills {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 12px;
+                        margin-top: 18px;
+                    }
+
+                    .dashboard-pill {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 8px;
+                        padding: 10px 14px;
+                        border-radius: 999px;
+                        background: rgba(255, 255, 255, 0.14);
+                        border: 1px solid rgba(255, 255, 255, 0.18);
+                        font-size: 0.9rem;
+                        font-weight: 600;
+                    }
+
+                    .dashboard-preview {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        min-height: 200px;
+                        border-radius: 24px;
+                        background: rgba(255, 255, 255, 0.12);
+                        border: 1px solid rgba(255, 255, 255, 0.18);
+                        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                    }
+
+                    .dashboard-preview i {
+                        font-size: 5.5rem;
+                        opacity: 0.28;
+                    }
+
+                    .flash-shell {
+                        width: min(100%, 1120px);
+                        margin: 0 auto 1.5rem;
+                    }
+
+                    .flash-message {
+                        padding: 14px 18px;
+                        border-radius: 14px;
+                        margin-bottom: 12px;
+                        font-size: 0.95rem;
+                        border: 1px solid transparent;
+                    }
+
+                    .flash-message.error {
+                        background: #fef2f2;
+                        color: #b91c1c;
+                        border-color: #fecaca;
+                    }
+
+                    .flash-message.warning {
+                        background: #fffbeb;
+                        color: #92400e;
+                        border-color: #fde68a;
+                    }
+
+                    .flash-message.success {
+                        background: #ecfdf5;
+                        color: #047857;
+                        border-color: #a7f3d0;
+                    }
+
+                    .glass-card {
+                        background: var(--white);
+                        border-radius: 22px;
+                        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+                        border: 1px solid var(--border-soft);
+                        overflow: hidden;
+                    }
+
+                    .section-band {
+                        background: linear-gradient(135deg, #1e40af, #2563eb);
+                        color: var(--white);
+                        padding: 18px 24px;
+                    }
+
+                    .file-drop-zone.dragover {
+                        background-color: rgba(59, 130, 246, 0.1);
+                        border-color: #2563eb;
+                        transform: scale(1.02);
+                    }
+
+                    #fileList::-webkit-scrollbar {
+                        width: 8px;
+                    }
+
+                    #fileList::-webkit-scrollbar-track {
+                        background: #f1f9ff;
+                        border-radius: 10px;
+                    }
+
+                    #fileList::-webkit-scrollbar-thumb {
+                        background: #93c5fd;
+                        border-radius: 10px;
+                    }
+
+                    #fileList::-webkit-scrollbar-thumb:hover {
+                        background: #60a5fa;
+                    }
+
+                    .dashboard-footer {
+                        background: #111827;
+                        color: var(--white);
+                        padding: 30px 20px;
+                        text-align: center;
+                        margin-top: 24px;
+                    }
+
+                    .dashboard-footer p {
+                        opacity: 0.75;
+                    }
+
+                    @media (max-width: 768px) {
+                        .dashboard-nav {
+                            padding: 16px 18px;
+                            flex-direction: column;
+                            gap: 12px;
+                        }
+
+                        .dashboard-shell {
+                            padding: 20px 12px 64px;
+                        }
+
+                        .dashboard-hero {
+                            padding: 24px 18px;
+                        }
+
+                        .dashboard-hero-grid {
+                            grid-template-columns: 1fr;
+                        }
+
+                        .dashboard-hero h1 {
+                            font-size: 1.8rem;
+                        }
+
+                        .dashboard-preview {
+                            min-height: 160px;
+                        }
+
+                        .glass-card .p-6 {
+                            padding: 1rem !important;
+                        }
+
+                        #submitBtn {
+                            width: 100%;
+                            justify-content: center;
+                        }
+                    }
+
+                    @media (max-width: 480px) {
+                        .dashboard-logo {
+                            font-size: 21px;
+                        }
+
+                        .dashboard-home-btn {
+                            width: 100%;
+                            justify-content: center;
+                        }
+
+                        .dashboard-hero h1 {
+                            font-size: 1.55rem;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <nav class="dashboard-nav">
+                    <a class="dashboard-logo" href="{{ url_for('index') }}">SmartHire<span>.AI</span></a>
+                    <a href="{{ url_for('home') }}" class="dashboard-home-btn"><i class="fas fa-home"></i> Home</a>
+                </nav>
+
+                <main>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div class="flash-shell">
+                                {% for category, message in messages %}
+                                    <div class="flash-message {{ category }}">{{ message }}</div>
+                                {% endfor %}
                             </div>
-                            <div class="hero-stat">
-                                <strong>AI Check</strong>
-                                <span>detect generated resumes</span>
-                            </div>
-                            <div class="hero-stat">
-                                <strong>Smart Match</strong>
-                                <span>rank candidates instantly</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="hero-preview-card">
-                        <div class="hero-preview-glow"></div>
-                        <div class="hero-preview-window">
-                            <div class="hero-preview-topbar">
-                                <span class="hero-preview-dot"></span>
-                                <span class="hero-preview-dot"></span>
-                                <span class="hero-preview-dot"></span>
-                            </div>
-                            <div class="hero-preview-body">
+                        {% endif %}
+                    {% endwith %}
+
+                    <div class="dashboard-shell">
+                        <section class="dashboard-hero">
+                            <div class="dashboard-hero-grid">
                                 <div>
-                                    <p class="text-sm uppercase tracking-[0.24em] text-slate-400 mb-2">Candidate Snapshot</p>
-                                    <h3 class="text-2xl font-bold text-slate-900">Smart Screening Overview</h3>
+                                    <h1>Resume Analyzer Dashboard</h1>
+                                    <p>Upload job details and candidate resumes to start AI-powered screening, ranking, and authenticity checks from this dedicated analyzer page.</p>
+                                    <div class="dashboard-pills">
+                                        <span class="dashboard-pill"><i class="fas fa-robot"></i> AI Analysis</span>
+                                        <span class="dashboard-pill"><i class="fas fa-chart-line"></i> Score Matching</span>
+                                        <span class="dashboard-pill"><i class="fas fa-envelope"></i> Email Reports</span>
+                                    </div>
                                 </div>
-                                <div class="hero-preview-pill-row">
-                                    <span class="hero-preview-pill">AI Detection</span>
-                                    <span class="hero-preview-pill">JD Match</span>
-                                    <span class="hero-preview-pill">Email Ready</span>
+                                <div class="dashboard-preview">
+                                    <i class="fas fa-file-alt"></i>
                                 </div>
-                                <div class="hero-preview-score">
-                                    <div class="hero-preview-ring"></div>
-                                    <div class="hero-preview-list">
-                                        <div><span>Match Score</span><span>Excellent</span></div>
-                                        <div><span>Skill Coverage</span><span>11 of 14</span></div>
-                                        <div><span>Resume Authenticity</span><span>Verified</span></div>
+                            </div>
+                        </section>
+
+                        <form method="POST" action="{{ url_for('analyze_resumes') }}" enctype="multipart/form-data" id="resumeForm" class="space-y-8">
+                            <div class="grid lg:grid-cols-2 gap-8">
+                                <div class="glass-card flex flex-col">
+                                    <div class="section-band">
+                                        <h2 class="text-lg font-semibold flex items-center">
+                                            <i class="fas fa-building mr-3"></i>Company Information
+                                        </h2>
+                                    </div>
+                                    <div class="p-6 space-y-4 flex-grow">
+                                        <div>
+                                            <label for="company_name" class="block text-sm font-medium text-slate-700 mb-1">Company Name *</label>
+                                            <input type="text" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="company_name" name="company_name" required>
+                                        </div>
+                                        <div>
+                                            <label for="hr_name" class="block text-sm font-medium text-slate-700 mb-1">HR Manager Name *</label>
+                                            <input type="text" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="hr_name" name="hr_name" required>
+                                        </div>
+                                        <div>
+                                            <label for="hr_email" class="block text-sm font-medium text-slate-700 mb-1">HR Email *</label>
+                                            <input type="email" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="hr_email" name="hr_email" required>
+                                        </div>
+                                        <div>
+                                            <label for="email_password" class="block text-sm font-medium text-slate-700 mb-1">Email Password *</label>
+                                            <input type="password" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="email_password" name="email_password" required>
+
+                                            <div class="mt-4">
+                                                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 shadow-sm">
+                                                    <div class="flex items-center justify-between mb-2 gap-2 flex-wrap">
+                                                        <span class="text-xs font-bold text-amber-800 flex items-center">
+                                                            <i class="fas fa-exclamation-triangle mr-2"></i> Important: Gmail users must use App Password
+                                                        </span>
+                                                        <button type="button" class="text-[10px] px-2 py-1 border border-amber-300 rounded text-amber-700 hover:bg-amber-100 transition-colors" onclick="document.getElementById('appPasswordGuide').classList.toggle('hidden')">
+                                                            <i class="fas fa-info-circle mr-1"></i> How to generate
+                                                        </button>
+                                                    </div>
+
+                                                    <div id="appPasswordGuide" class="hidden mt-3 space-y-4 text-xs">
+                                                        <div class="bg-white p-4 rounded-lg border border-amber-100">
+                                                            <h6 class="font-bold mb-2 flex items-center text-amber-900"><i class="fas fa-key mr-2"></i> Gmail Setup Guide</h6>
+                                                            <p class="text-slate-600 mb-2 font-medium">Why App Password is required:</p>
+                                                            <p class="text-slate-500 mb-3 leading-relaxed">Gmail requires App Passwords for third-party applications. Your regular password will not work for SMTP.</p>
+                                                            <p class="text-slate-600 mb-2 font-medium">Step-by-step instructions:</p>
+                                                            <ol class="list-decimal pl-4 space-y-1 text-slate-500">
+                                                                <li>Go to your <a href="https://myaccount.google.com/security" target="_blank" class="text-primary-600 hover:underline inline-flex items-center">Google Security <i class="fas fa-external-link-alt ml-1 scale-75"></i></a></li>
+                                                                <li>Select <strong>2-Step Verification</strong></li>
+                                                                <li>Select <strong>App passwords</strong></li>
+                                                                <li>Choose <strong>Mail</strong> and <strong>Other (Custom name)</strong></li>
+                                                                <li>Enter "Resume Analyzer" and click <strong>Generate</strong></li>
+                                                                <li>Copy the 16-digit password and paste it above</li>
+                                                            </ol>
+                                                            <div class="mt-4 flex flex-col gap-2">
+                                                                <div class="bg-blue-50 text-blue-800 p-2 rounded flex items-start">
+                                                                    <i class="fas fa-lightbulb mt-0.5 mr-2"></i>
+                                                                    <span><strong>Tip:</strong> You cannot view it again after closing, but you can generate a new one.</span>
+                                                                </div>
+                                                                <a href="https://support.google.com/accounts/answer/185833" target="_blank" class="inline-flex items-center justify-center bg-primary-600 hover:bg-primary-700 text-white px-3 py-1.5 rounded-md font-medium transition-colors">
+                                                                    <i class="fas fa-file-alt mr-2"></i> Official Help Article
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="glass-card flex flex-col">
+                                    <div class="section-band">
+                                        <h2 class="text-lg font-semibold flex items-center">
+                                            <i class="fas fa-bullseye mr-3"></i>Job Analysis Settings
+                                        </h2>
+                                    </div>
+                                    <div class="p-6 space-y-4 flex-grow">
+                                        <div>
+                                            <label for="target_role" class="block text-sm font-medium text-slate-700 mb-1">Target Job Role</label>
+                                            <select class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none bg-white" id="target_role" name="target_role">
+                                                <option value="">Auto-detect role from resume</option>
+                                                <optgroup label="IT and Technology Roles">
+                                                    <option value="Data Analyst">Data Analyst</option>
+                                                    <option value="Software Developer">Software Developer</option>
+                                                    <option value="Web Developer">Web Developer</option>
+                                                    <option value="Full Stack Developer">Full Stack Developer</option>
+                                                    <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
+                                                    <option value="Cloud Engineer">Cloud Engineer</option>
+                                                    <option value="AI/ML Engineer">AI/ML Engineer</option>
+                                                    <option value="DevOps Engineer">DevOps Engineer</option>
+                                                    <option value="Mobile Developer">Mobile Developer</option>
+                                                    <option value="UI/UX Designer">UI/UX Designer</option>
+                                                    <option value="Graphic Designer">Graphic Designer</option>
+                                                    <option value="Product Manager">Product Manager</option>
+                                                    <option value="Other">Other (Use JD or Custom Requirements)</option>
+                                                </optgroup>
+                                            </select>
+                                            <p class="mt-1 text-xs text-slate-500">Select Other to use skills from the JD file or auto-detection.</p>
+                                        </div>
+                                        <div>
+                                            <label for="hr_requirements" class="block text-sm font-medium text-slate-700 mb-1">Additional Requirements</label>
+                                            <textarea class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="hr_requirements" name="hr_requirements" rows="4" placeholder="Enter any specific requirements or preferences..."></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="glass-card">
+                                <div class="section-band">
+                                    <h2 class="text-lg font-semibold flex items-center">
+                                        <i class="fas fa-file-alt mr-3"></i>Upload Job Description File
+                                    </h2>
+                                </div>
+                                <div class="p-6">
+                                    <input type="file" class="w-full text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-all cursor-pointer" name="jd_file" accept=".pdf,.txt">
+                                    <p class="mt-2 text-xs text-slate-500 italic text-center">Upload the JD in .txt or .pdf format. This is optional but recommended when using Other role.</p>
+                                </div>
+                            </div>
+
+                            <div class="glass-card">
+                                <div class="section-band flex justify-between items-center gap-3 flex-wrap">
+                                    <h2 class="text-lg font-semibold flex items-center">
+                                        <i class="fas fa-upload mr-3"></i>Upload Resume Files
+                                    </h2>
+                                    <span class="text-blue-100 text-xs font-medium">Supported: PDF, DOCX, DOC, TXT</span>
+                                </div>
+                                <div class="p-6">
+                                    <div class="relative group">
+                                        <div class="file-drop-zone border-2 border-dashed border-primary-300 rounded-2xl p-10 text-center bg-primary-50/30 group-hover:bg-primary-50/50 group-hover:border-primary-400 transition-all cursor-pointer" id="dropZone">
+                                            <div class="space-y-4">
+                                                <div class="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mx-auto transition-transform group-hover:scale-110">
+                                                    <i class="fas fa-cloud-upload-alt text-2xl"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="text-lg font-bold text-slate-800">Drag and Drop Resume Files Here</h6>
+                                                    <p class="text-slate-500">or click to browse from your computer</p>
+                                                </div>
+                                                <input type="file" class="hidden" id="resume_files" name="resume_files" multiple accept=".pdf,.docx,.doc,.txt" required>
+                                                <button type="button" class="inline-flex items-center px-6 py-2 bg-primary-600 text-white rounded-full font-semibold hover:bg-primary-700 transition-all transform hover:-translate-y-px active:translate-y-0" onclick="document.getElementById('resume_files').click()">
+                                                    <i class="fas fa-folder-open mr-2"></i>Browse Files
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="fileList" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-2"></div>
+                                </div>
+                            </div>
+
+                            <div class="text-center pb-8">
+                                <button type="submit" class="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white transition-all duration-200 bg-primary-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 shadow-xl hover:shadow-primary-300/50 hover:bg-primary-700" id="submitBtn">
+                                    <i class="fas fa-cogs mr-2 group-hover:rotate-180 transition-transform duration-500"></i>
+                                    Analyze Resumes
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                </div>
-            </div>
-        </header>
+                </main>
 
-        <section class="landing-section">
-            <h2 class="landing-section-title">Why SmartHire.AI?</h2>
-            <div class="vs-container">
-                <div class="vs-box problem">
-                    <h3><i class="fa-solid fa-triangle-exclamation"></i> The Problem</h3>
-                    <ul>
-                        <li>Recruiters spend hours manually screening resumes.</li>
-                        <li>Many resumes are AI-generated, hiding genuine talent.</li>
-                        <li>Traditional ATS systems rely only on basic keyword matching.</li>
-                    </ul>
-                </div>
-                <div class="vs-box solution">
-                    <h3><i class="fa-solid fa-lightbulb"></i> The Solution</h3>
-                    <ul>
-                        <li>Automated parsing of PDF and DOCX for skills, experience, and education.</li>
-                        <li>AI-based relevance scoring to match candidates to job descriptions accurately.</li>
-                        <li>Advanced detection of AI-generated or fake resumes.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+                <footer class="dashboard-footer">
+                    <p>&copy; 2026 SmartHire.AI | Built with love by Sagar</p>
+                </footer>
 
-        <section class="landing-section">
-            <h2 class="landing-section-title">Key Features</h2>
-            <div class="landing-features">
-                <div class="landing-card">
-                    <i class="fa-solid fa-robot"></i>
-                    <h3>AI Authenticity Check</h3>
-                    <p>Detect AI-generated vs human-written content using advanced perplexity and burstiness signals.</p>
-                </div>
-                <div class="landing-card">
-                    <i class="fa-solid fa-ranking-star"></i>
-                    <h3>Automated Ranking</h3>
-                    <p>Instantly ranks candidates as Excellent, Good, or Average based on customized job requirements.</p>
-                </div>
-                <div class="landing-card">
-                    <i class="fa-solid fa-file-circle-check"></i>
-                    <h3>Smart Parsing and Matching</h3>
-                    <p>Compare extracted resume skills directly with job descriptions to estimate candidate fit more accurately.</p>
-                </div>
-                <div class="landing-card">
-                    <i class="fa-solid fa-envelope-open-text"></i>
-                    <h3>Automated Emails</h3>
-                    <p>Automatically trigger interview invitations or rejection emails based on the final AI resume score.</p>
-                </div>
-            </div>
-        </section>
+                <script>
+                    const dropZone = document.getElementById('dropZone');
+                    const fileInput = document.getElementById('resume_files');
+                    const fileList = document.getElementById('fileList');
 
-        <section class="landing-section">
-            <div class="tech-bg">
-                <h2 class="landing-section-title" style="margin-bottom: 10px;">Powered By Modern Tech</h2>
-                <p class="tech-subtitle">Built with the latest tools to ensure speed, accuracy, and reliability.</p>
-                <div class="badges">
-                    <span class="badge-pill"><i class="fa-brands fa-html5"></i> HTML and CSS</span>
-                    <span class="badge-pill"><i class="fa-brands fa-bootstrap"></i> Bootstrap</span>
-                    <span class="badge-pill"><i class="fa-brands fa-python"></i> Python Flask</span>
-                    <span class="badge-pill"><i class="fa-solid fa-brain"></i> AI and ML</span>
-                    <span class="badge-pill">NLTK and SpaCy</span>
-                    <span class="badge-pill">Scikit-learn</span>
-                    <span class="badge-pill"><i class="fa-solid fa-database"></i> SQLite</span>
-                    <span class="badge-pill"><i class="fa-brands fa-google"></i> Gmail API</span>
-                </div>
-            </div>
-        </section>
+                    if (dropZone && fileInput && fileList) {
+                        dropZone.addEventListener('click', (event) => {
+                            if (event.target.tagName !== 'BUTTON' && event.target.closest('button') === null) {
+                                fileInput.click();
+                            }
+                        });
 
-        <section id="resume-analyzer-section" class="resume-analyzer-section">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <div class="flash-shell">
-                        {% for category, message in messages %}
-                            <div class="flash-message {{ category }}">{{ message }}</div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
+                        dropZone.addEventListener('dragover', (event) => {
+                            event.preventDefault();
+                            dropZone.classList.add('dragover');
+                        });
 
-            <div class="form-shell px-4 py-4 sm:py-6 lg:py-8">
+                        dropZone.addEventListener('dragleave', () => {
+                            dropZone.classList.remove('dragover');
+                        });
+
+                        dropZone.addEventListener('drop', (event) => {
+                            event.preventDefault();
+                            dropZone.classList.remove('dragover');
+                            const files = event.dataTransfer.files;
+                            if (files.length > 0) {
+                                const dataTransfer = new DataTransfer();
+                                Array.from(fileInput.files).forEach((file) => dataTransfer.items.add(file));
+                                Array.from(files).forEach((file) => dataTransfer.items.add(file));
+                                fileInput.files = dataTransfer.files;
+                                displayFiles(fileInput.files);
+                            }
+                        });
+
+                        fileInput.addEventListener('change', (event) => {
+                            displayFiles(event.target.files);
+                        });
+                    }
+
+                    function displayFiles(files) {
+                        if (!fileList) {
+                            return;
+                        }
+
+                        fileList.innerHTML = '';
+                        Array.from(files).forEach((file, index) => {
+                            const fileItem = document.createElement('div');
+                            fileItem.className = 'flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-xl hover:bg-white hover:shadow-sm transition-all';
+                            fileItem.innerHTML = `
+                                <div class="flex items-center space-x-3 overflow-hidden">
+                                    <div class="w-8 h-8 flex-shrink-0 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-file-alt text-sm"></i>
+                                    </div>
+                                    <div class="flex flex-col overflow-hidden">
+                                        <span class="text-sm font-semibold text-slate-700 truncate">${file.name}</span>
+                                        <span class="text-[10px] text-slate-400 uppercase font-bold">${(file.size / 1024).toFixed(2)} KB</span>
+                                    </div>
+                                </div>
+                                <button type="button" class="p-1 hover:bg-red-50 text-slate-400 hover:text-red-500 rounded-lg transition-colors" onclick="removeFile(${index})">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            `;
+                            fileList.appendChild(fileItem);
+                        });
+                    }
+
+                    function removeFile(index) {
+                        const dataTransfer = new DataTransfer();
+                        const files = fileInput.files;
+                        for (let fileIndex = 0; fileIndex < files.length; fileIndex += 1) {
+                            if (fileIndex !== index) {
+                                dataTransfer.items.add(files[fileIndex]);
+                            }
+                        }
+                        fileInput.files = dataTransfer.files;
+                        displayFiles(fileInput.files);
+                    }
+
+                    const resumeForm = document.getElementById('resumeForm');
+                    if (resumeForm) {
+                        resumeForm.addEventListener('submit', () => {
+                            const submitBtn = document.getElementById('submitBtn');
+                            submitBtn.disabled = true;
+                            submitBtn.innerHTML = `
+                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Analyzing...
+                            `;
+                        });
+                    }
+                </script>
+            </body>
+            </html>
                 <div class="analyzer-header">
                     <h2>Resume Analyzer Dashboard</h2>
                     <p>Upload job details and candidate resumes below to start AI-powered screening, ranking, and authenticity checks from the same index page.</p>
