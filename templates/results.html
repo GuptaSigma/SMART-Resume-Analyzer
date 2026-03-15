@@ -231,6 +231,115 @@ body {
         padding: 0 6rem;
     }
 }
+
+/* ===== MOBILE RESPONSIVE FIXES ===== */
+@media (max-width: 767px) {
+    /* Results page header: stack title + buttons vertically */
+    .section-header .d-flex.justify-content-between.align-items-center {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 0.75rem;
+    }
+    .section-header .d-flex.justify-content-between.align-items-center > div:first-child {
+        display: none; /* hide empty spacer */
+    }
+    .section-header h1 {
+        font-size: 1.4rem;
+        word-break: break-word;
+    }
+    .section-header p.lead {
+        font-size: 0.9rem;
+    }
+    .section-header .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Shortlisted / Not-selected section bar: heading + action button */
+    .mb-5 > .d-flex.justify-content-between.align-items-center {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .mb-5 > .d-flex.justify-content-between.align-items-center h2 {
+        font-size: 1.15rem;
+    }
+    .mb-5 > .d-flex.justify-content-between.align-items-center .btn {
+        width: 100%;
+    }
+
+    /* Card header: name+skills left, score badge right → stack vertically */
+    .card-header .d-flex.justify-content-between.align-items-start {
+        flex-direction: column-reverse;
+        gap: 0.5rem;
+    }
+    .card-header .text-end {
+        text-align: left !important;
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+    }
+
+    /* Card footer: wrap buttons on small screens */
+    .card-footer .d-flex.gap-2 {
+        flex-wrap: wrap;
+    }
+    .card-footer .btn {
+        flex: 1 1 auto;
+        font-size: 0.8rem;
+        padding: 0.35rem 0.6rem;
+    }
+    .email-btn {
+        min-width: unset;
+    }
+
+    /* Alert info: allow badge wrapping */
+    .alert-info {
+        font-size: 0.85rem;
+    }
+    .alert-info .badge {
+        display: inline-block;
+        margin-top: 0.25rem;
+    }
+
+    /* Stats cards: 2-column grid on mobile */
+    .row .col-md-3 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    /* Skills inline list: allow wrapping */
+    .list-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3rem;
+        padding-left: 0;
+    }
+    .list-inline-item {
+        margin-right: 0 !important;
+    }
+
+    /* Prevent long URLs / emails from breaking layout */
+    .card a,
+    .candidate-email-placeholder {
+        word-break: break-all;
+        overflow-wrap: break-word;
+    }
+}
+
+@media (max-width: 400px) {
+    /* On very small phones: 1-column stats */
+    .row .col-md-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .section-header h1 {
+        font-size: 1.1rem;
+    }
+    .card-footer .btn {
+        font-size: 0.75rem;
+    }
+}
 </style>
 </head>
 <body>

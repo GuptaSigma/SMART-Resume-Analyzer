@@ -90,6 +90,48 @@
                 grid-template-columns: minmax(0, 1.15fr) 280px;
             }
         }
+
+        /* ===== MOBILE RESPONSIVE FIXES ===== */
+        @media (max-width: 640px) {
+            /* Hero feature cards: allow 2 per row even on small phones */
+            .hero-feature-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+            .hero-feature-card {
+                padding: 0.75rem;
+            }
+            .hero-feature-card .w-12 {
+                width: 2.25rem;
+                height: 2.25rem;
+            }
+
+            /* Form sections: full-width padding */
+            .form-shell {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+
+            /* JD / Resume upload card padding */
+            .form-shell .p-6 {
+                padding: 1rem !important;
+            }
+
+            /* Submit button: full width on mobile */
+            #submitBtn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .hero-feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-shell {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans overflow-x-hidden">
