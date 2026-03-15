@@ -33,6 +33,11 @@
     </script>
     <style>
         /* Custom styles that tailwind might not cover exactly */
+        html,
+        body {
+            overflow-x: hidden;
+        }
+
         .file-drop-zone.dragover {
             background-color: rgba(59, 130, 246, 0.1);
             border-color: #2563eb;
@@ -55,9 +60,39 @@
         .hero-gradient {
             background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
         }
+
+        .upload-page-shell {
+            width: min(100%, 1120px);
+            margin-inline: auto;
+        }
+
+        .hero-content-grid {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .hero-feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .hero-feature-card {
+            min-width: 0;
+        }
+
+        .form-shell {
+            width: min(100%, 1120px);
+            margin-inline: auto;
+        }
+
+        @media (min-width: 1024px) {
+            .hero-content-grid {
+                grid-template-columns: minmax(0, 1.15fr) 280px;
+            }
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans">
+<body class="bg-slate-50 text-slate-900 font-sans overflow-x-hidden">
     <nav class="bg-primary-600 text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
@@ -75,30 +110,30 @@
     </nav>
 
     <main>
-        <section class="hero-gradient text-white py-16 px-4">
-            <div class="max-w-7xl mx-auto">
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div class="space-y-8">
-                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
+        <section class="hero-gradient text-white px-4 py-10 sm:py-12 lg:py-14">
+            <div class="upload-page-shell">
+                <div class="hero-content-grid grid gap-8 items-center">
+                    <div class="space-y-6 max-w-3xl">
+                        <h1 class="text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold leading-tight">
                             SmartHire.AI
                         </h1>
-                        <p class="text-xl text-blue-100 max-w-2xl">
+                        <p class="text-lg sm:text-xl text-blue-100 max-w-2xl leading-relaxed">
                             Upload multiple resumes and get AI-powered analysis with job matching, skill assessment, and candidate ranking.
                         </p>
-                        <div class="flex flex-wrap gap-4">
-                            <div class="bg-white/20 backdrop-blur-md p-4 rounded-xl text-center flex-1 min-w-[120px]">
+                        <div class="hero-feature-grid">
+                            <div class="hero-feature-card bg-white/20 backdrop-blur-md p-4 rounded-xl text-center">
                                 <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
                                     <i class="fas fa-robot text-xl"></i>
                                 </div>
                                 <span class="text-sm font-medium">AI Analysis</span>
                             </div>
-                            <div class="bg-white/20 backdrop-blur-md p-4 rounded-xl text-center flex-1 min-w-[120px]">
+                            <div class="hero-feature-card bg-white/20 backdrop-blur-md p-4 rounded-xl text-center">
                                 <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
                                     <i class="fas fa-chart-line text-xl"></i>
                                 </div>
                                 <span class="text-sm font-medium">Score Matching</span>
                             </div>
-                            <div class="bg-white/20 backdrop-blur-md p-4 rounded-xl text-center flex-1 min-w-[120px]">
+                            <div class="hero-feature-card bg-white/20 backdrop-blur-md p-4 rounded-xl text-center">
                                 <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
                                     <i class="fas fa-envelope text-xl"></i>
                                 </div>
@@ -106,14 +141,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="hidden lg:flex justify-center">
-                        <i class="fas fa-file-alt text-[10rem] opacity-20"></i>
+                    <div class="hidden lg:flex justify-center items-center">
+                        <div class="flex h-64 w-64 items-center justify-center rounded-[2rem] border border-white/15 bg-white/10 backdrop-blur-sm">
+                            <i class="fas fa-file-alt text-[7rem] opacity-30"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="form-shell px-4 py-8 sm:py-10 lg:py-12">
             <form method="POST" action="{{ url_for('analyze_resumes') }}" enctype="multipart/form-data" id="resumeForm" class="space-y-8">
                 <div class="grid lg:grid-cols-2 gap-8">
                     <!-- Company Information -->
@@ -276,7 +313,7 @@
         </div>
 
         <!-- Features Grid -->
-        <section class="max-w-7xl mx-auto px-4 py-16">
+        <section class="upload-page-shell px-4 py-12 sm:py-16">
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow text-center">
                     <div class="w-16 h-16 bg-blue-50 text-primary-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
@@ -397,5 +434,4 @@
         });
     </script>
 </body>
-</html>
 </html>
