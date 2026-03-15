@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartHire.AI</title>
-    <!-- Tailwind CSS CDN -->
+    <title>SmartHire.AI | AI-Powered Recruitment</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -24,7 +25,6 @@
                             700: '#1d4ed8',
                             800: '#1e40af',
                             900: '#1e3a8a',
-                            950: '#172554',
                         },
                     },
                 },
@@ -32,33 +32,273 @@
         }
     </script>
     <style>
-        /* Custom styles that tailwind might not cover exactly */
-        html,
+        :root {
+            --primary-blue: #2563eb;
+            --light-blue: #3b82f6;
+            --bg-color: #f5f7fb;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --white: #ffffff;
+            --border-soft: #dbe4f4;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
         }
 
-        .file-drop-zone.dragover {
-            background-color: rgba(59, 130, 246, 0.1);
-            border-color: #2563eb;
-            transform: scale(1.02);
+        .landing-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
-        #fileList::-webkit-scrollbar {
-            width: 8px;
+
+        .landing-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-decoration: none;
         }
-        #fileList::-webkit-scrollbar-track {
-            background: #f1f9ff;
-            border-radius: 10px;
+
+        .landing-logo span {
+            color: var(--text-light);
         }
-        #fileList::-webkit-scrollbar-thumb {
-            background: #93c5fd;
-            border-radius: 10px;
+
+        .landing-nav-btn,
+        .landing-hero-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            text-decoration: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            font-weight: 600;
         }
-        #fileList::-webkit-scrollbar-thumb:hover {
-            background: #60a5fa;
+
+        .landing-nav-btn {
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.18);
         }
-        .hero-gradient {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+
+        .landing-nav-btn:hover,
+        .landing-nav-btn:focus-visible {
+            background: var(--light-blue);
+            transform: translateY(-2px);
+        }
+
+        .landing-hero {
+            background: linear-gradient(135deg, #1e3a8a, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+            padding: 100px 20px 130px;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+        }
+
+        .landing-hero h1 {
+            font-size: 52px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .landing-hero p {
+            font-size: 18px;
+            max-width: 760px;
+            margin: 0 auto 30px;
+            opacity: 0.92;
+            animation: fadeInUp 1s ease;
+        }
+
+        .landing-hero-btn {
+            background: var(--white);
+            color: var(--primary-blue);
+            padding: 15px 35px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 999px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .landing-hero-btn:hover,
+        .landing-hero-btn:focus-visible {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .landing-section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .landing-section-title {
+            font-size: 36px;
+            color: var(--text-dark);
+            margin-bottom: 50px;
+            font-weight: 700;
+        }
+
+        .vs-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .vs-box {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 18px;
+            flex: 1;
+            min-width: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            text-align: left;
+        }
+
+        .vs-box h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .problem h3 {
+            color: #ef4444;
+        }
+
+        .solution h3 {
+            color: #10b981;
+        }
+
+        .vs-box ul {
+            list-style: none;
+            color: var(--text-light);
+            padding: 0;
+            margin: 0;
+        }
+
+        .vs-box ul li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .problem ul li::before {
+            content: "x";
+            color: #ef4444;
+            font-weight: 700;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .solution ul li::before {
+            content: "\f00c";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: #10b981;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 0.9rem;
+        }
+
+        .landing-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .landing-card {
+            background: var(--white);
+            padding: 30px 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            border-bottom: 4px solid transparent;
+        }
+
+        .landing-card:hover {
+            transform: translateY(-10px);
+            border-bottom: 4px solid var(--primary-blue);
+        }
+
+        .landing-card i {
+            font-size: 40px;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        .landing-card h3 {
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .landing-card p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .tech-bg {
+            background: var(--white);
+            padding: 60px 20px;
+            border-radius: 24px;
+            margin: 40px auto 20px;
+            max-width: 1000px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .tech-subtitle {
+            color: var(--text-light);
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .badge-pill {
+            background: #eef2ff;
+            color: var(--primary-blue);
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 14px;
+            border: 1px solid #c7d2fe;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .resume-analyzer-section {
+            padding: 40px 16px 80px;
         }
 
         .upload-page-shell {
@@ -66,195 +306,370 @@
             margin-inline: auto;
         }
 
-        .hero-content-grid {
-            grid-template-columns: minmax(0, 1fr);
-        }
-
-        .hero-feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-        }
-
-        .hero-feature-card {
-            min-width: 0;
-        }
-
         .form-shell {
             width: min(100%, 1120px);
             margin-inline: auto;
         }
 
-        @media (min-width: 1024px) {
-            .hero-content-grid {
-                grid-template-columns: minmax(0, 1.15fr) 280px;
+        .analyzer-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .analyzer-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .analyzer-header p {
+            max-width: 760px;
+            margin: 0.75rem auto 0;
+            color: var(--text-light);
+        }
+
+        .flash-shell {
+            width: min(100%, 1120px);
+            margin: 0 auto 1.5rem;
+        }
+
+        .flash-message {
+            padding: 14px 18px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            border: 1px solid transparent;
+        }
+
+        .flash-message.error {
+            background: #fef2f2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+
+        .flash-message.warning {
+            background: #fffbeb;
+            color: #92400e;
+            border-color: #fde68a;
+        }
+
+        .flash-message.success {
+            background: #ecfdf5;
+            color: #047857;
+            border-color: #a7f3d0;
+        }
+
+        .glass-card {
+            background: var(--white);
+            border-radius: 22px;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+            border: 1px solid var(--border-soft);
+            overflow: hidden;
+        }
+
+        .section-band {
+            background: linear-gradient(135deg, #1e40af, #2563eb);
+            color: var(--white);
+            padding: 18px 24px;
+        }
+
+        .file-drop-zone.dragover {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-color: #2563eb;
+            transform: scale(1.02);
+        }
+
+        #fileList::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #fileList::-webkit-scrollbar-track {
+            background: #f1f9ff;
+            border-radius: 10px;
+        }
+
+        #fileList::-webkit-scrollbar-thumb {
+            background: #93c5fd;
+            border-radius: 10px;
+        }
+
+        #fileList::-webkit-scrollbar-thumb:hover {
+            background: #60a5fa;
+        }
+
+        .landing-footer {
+            background: #111827;
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .landing-footer p {
+            opacity: 0.75;
+            margin-top: 0.5rem;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        /* ===== MOBILE RESPONSIVE FIXES ===== */
-        @media (max-width: 640px) {
-            /* Hero feature cards: allow 2 per row even on small phones */
-            .hero-feature-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
             }
-            .hero-feature-card {
-                padding: 0.75rem;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
-            .hero-feature-card .w-12 {
-                width: 2.25rem;
-                height: 2.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .landing-nav {
+                padding: 16px 18px;
+                flex-direction: column;
+                gap: 12px;
             }
 
-            /* Form sections: full-width padding */
-            .form-shell {
-                padding-left: 0.75rem;
-                padding-right: 0.75rem;
+            .landing-hero {
+                padding: 80px 18px 110px;
+                clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
             }
 
-            /* JD / Resume upload card padding */
+            .landing-hero h1 {
+                font-size: 36px;
+            }
+
+            .landing-hero p {
+                font-size: 16px;
+            }
+
+            .landing-section {
+                padding: 64px 18px;
+            }
+
+            .landing-section-title {
+                font-size: 30px;
+                margin-bottom: 34px;
+            }
+
+            .vs-container {
+                flex-direction: column;
+            }
+
+            .vs-box {
+                min-width: 100%;
+                padding: 28px 22px;
+            }
+
+            .resume-analyzer-section {
+                padding: 24px 12px 64px;
+            }
+
             .form-shell .p-6 {
                 padding: 1rem !important;
             }
 
-            /* Submit button: full width on mobile */
             #submitBtn {
                 width: 100%;
                 justify-content: center;
             }
         }
 
-        @media (max-width: 400px) {
-            .hero-feature-grid {
-                grid-template-columns: 1fr;
+        @media (max-width: 480px) {
+            .landing-logo {
+                font-size: 21px;
             }
-            .form-shell {
-                padding-left: 0.5rem;
-                padding-right: 0.5rem;
+
+            .landing-nav-btn,
+            .landing-hero-btn {
+                width: 100%;
+            }
+
+            .landing-hero h1 {
+                font-size: 30px;
+            }
+
+            .landing-section-title {
+                font-size: 26px;
+            }
+
+            .badges {
+                gap: 10px;
+            }
+
+            .badge-pill {
+                font-size: 13px;
+                padding: 9px 14px;
+            }
+
+            .analyzer-header h2 {
+                font-size: 1.6rem;
             }
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans overflow-x-hidden">
-    <nav class="bg-primary-600 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <a class="flex items-center space-x-2 text-xl font-bold" href="{{ url_for('index') }}">
-                    <i class="fas fa-brain"></i>
-                    <span>SmartHire.AI</span>
-                </a>
-                <div class="hidden md:flex space-x-8">
-                    <a class="hover:text-blue-200 transition-colors flex items-center" href="{{ url_for('index') }}">
-                        <i class="fas fa-home mr-1 text-sm"></i>Home
-                    </a>
-                </div>
-            </div>
-        </div>
+<body>
+    <nav class="landing-nav">
+        <a class="landing-logo" href="{{ url_for('index') }}">SmartHire<span>.AI</span></a>
+        <a href="#resume-analyzer-section" class="landing-nav-btn">Go to Dashboard</a>
     </nav>
 
     <main>
-        <section class="hero-gradient text-white px-4 py-10 sm:py-12 lg:py-14">
-            <div class="upload-page-shell">
-                <div class="hero-content-grid grid gap-8 items-center">
-                    <div class="space-y-6 max-w-3xl">
-                        <h1 class="text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold leading-tight">
-                            SmartHire.AI
-                        </h1>
-                        <p class="text-lg sm:text-xl text-blue-100 max-w-2xl leading-relaxed">
-                            Upload multiple resumes and get AI-powered analysis with job matching, skill assessment, and candidate ranking.
-                        </p>
-                        <div class="hero-feature-grid">
-                            <div class="hero-feature-card bg-white/20 backdrop-blur-md p-4 rounded-xl text-center">
-                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
-                                    <i class="fas fa-robot text-xl"></i>
-                                </div>
-                                <span class="text-sm font-medium">AI Analysis</span>
-                            </div>
-                            <div class="hero-feature-card bg-white/20 backdrop-blur-md p-4 rounded-xl text-center">
-                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
-                                    <i class="fas fa-chart-line text-xl"></i>
-                                </div>
-                                <span class="text-sm font-medium">Score Matching</span>
-                            </div>
-                            <div class="hero-feature-card bg-white/20 backdrop-blur-md p-4 rounded-xl text-center">
-                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
-                                    <i class="fas fa-envelope text-xl"></i>
-                                </div>
-                                <span class="text-sm font-medium">Email Reports</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="hidden lg:flex justify-center items-center">
-                        <div class="flex h-64 w-64 items-center justify-center rounded-[2rem] border border-white/15 bg-white/10 backdrop-blur-sm">
-                            <i class="fas fa-file-alt text-[7rem] opacity-30"></i>
-                        </div>
-                    </div>
+        <header class="landing-hero">
+            <h1>Hire Smarter, Faster, Fairer</h1>
+            <p>Smart-Hire is an intelligent hiring platform designed to streamline recruitment by matching the right candidates with the right roles. Zero-touch recruitment automation that saves 15+ hours per hiring cycle.</p>
+            <a href="#resume-analyzer-section" class="landing-hero-btn">Start Analyzing Resumes <i class="fa-solid fa-arrow-right"></i></a>
+        </header>
+
+        <section class="landing-section">
+            <h2 class="landing-section-title">Why SmartHire.AI?</h2>
+            <div class="vs-container">
+                <div class="vs-box problem">
+                    <h3><i class="fa-solid fa-triangle-exclamation"></i> The Problem</h3>
+                    <ul>
+                        <li>Recruiters spend hours manually screening resumes.</li>
+                        <li>Many resumes are AI-generated, hiding genuine talent.</li>
+                        <li>Traditional ATS systems rely only on basic keyword matching.</li>
+                    </ul>
+                </div>
+                <div class="vs-box solution">
+                    <h3><i class="fa-solid fa-lightbulb"></i> The Solution</h3>
+                    <ul>
+                        <li>Automated parsing of PDF and DOCX for skills, experience, and education.</li>
+                        <li>AI-based relevance scoring to match candidates to job descriptions accurately.</li>
+                        <li>Advanced detection of AI-generated or fake resumes.</li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <div class="form-shell px-4 py-8 sm:py-10 lg:py-12">
-            <form method="POST" action="{{ url_for('analyze_resumes') }}" enctype="multipart/form-data" id="resumeForm" class="space-y-8">
-                <div class="grid lg:grid-cols-2 gap-8">
-                    <!-- Company Information -->
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
-                        <div class="bg-primary-600 px-6 py-4">
-                            <h2 class="text-white text-lg font-semibold flex items-center">
-                                <i class="fas fa-building mr-3"></i>Company Information
-                            </h2>
-                        </div>
-                        <div class="p-6 space-y-4 flex-grow">
-                            <div>
-                                <label for="company_name" class="block text-sm font-medium text-slate-700 mb-1">Company Name *</label>
-                                <input type="text" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="company_name" name="company_name" required>
-                            </div>
-                            <div>
-                                <label for="hr_name" class="block text-sm font-medium text-slate-700 mb-1">HR Manager Name *</label>
-                                <input type="text" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="hr_name" name="hr_name" required>
-                            </div>
-                            <div>
-                                <label for="hr_email" class="block text-sm font-medium text-slate-700 mb-1">HR Email *</label>
-                                <input type="email" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="hr_email" name="hr_email" required>
-                            </div>
-                            <div>
-                                <label for="email_password" class="block text-sm font-medium text-slate-700 mb-1">Email Password *</label>
-                                <input type="password" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="email_password" name="email_password" required>
-                                
-                                <div class="mt-4">
-                                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 shadow-sm">
-                                        <div class="flex items-center justify-between mb-2">
-                                            <span class="text-xs font-bold text-amber-800 flex items-center">
-                                                <i class="fas fa-exclamation-triangle mr-2"></i> Important: Gmail users must use App Password
-                                            </span>
-                                            <button type="button" class="text-[10px] px-2 py-1 border border-amber-300 rounded text-amber-700 hover:bg-amber-100 transition-colors" onclick="document.getElementById('appPasswordGuide').classList.toggle('hidden')">
-                                                <i class="fas fa-info-circle mr-1"></i> How to generate
-                                            </button>
-                                        </div>
+        <section class="landing-section">
+            <h2 class="landing-section-title">Key Features</h2>
+            <div class="landing-features">
+                <div class="landing-card">
+                    <i class="fa-solid fa-robot"></i>
+                    <h3>AI Authenticity Check</h3>
+                    <p>Detect AI-generated vs human-written content using advanced perplexity and burstiness signals.</p>
+                </div>
+                <div class="landing-card">
+                    <i class="fa-solid fa-ranking-star"></i>
+                    <h3>Automated Ranking</h3>
+                    <p>Instantly ranks candidates as Excellent, Good, or Average based on customized job requirements.</p>
+                </div>
+                <div class="landing-card">
+                    <i class="fa-solid fa-file-circle-check"></i>
+                    <h3>Smart Parsing and Matching</h3>
+                    <p>Compare extracted resume skills directly with job descriptions to estimate candidate fit more accurately.</p>
+                </div>
+                <div class="landing-card">
+                    <i class="fa-solid fa-envelope-open-text"></i>
+                    <h3>Automated Emails</h3>
+                    <p>Automatically trigger interview invitations or rejection emails based on the final AI resume score.</p>
+                </div>
+            </div>
+        </section>
 
-                                        <div id="appPasswordGuide" class="hidden mt-3 space-y-4 text-xs">
-                                            <div class="bg-white p-4 rounded-lg border border-amber-100">
-                                                <h6 class="font-bold mb-2 flex items-center text-amber-900"><i class="fas fa-key mr-2"></i> Gmail Setup Guide</h6>
-                                                
-                                                <p class="text-slate-600 mb-2 font-medium">Why App Password is required:</p>
-                                                <p class="text-slate-500 mb-3 leading-relaxed">Gmail requires App Passwords for third-party applications. Your regular password will NOT work for SMTP.</p>
+        <section class="landing-section">
+            <div class="tech-bg">
+                <h2 class="landing-section-title" style="margin-bottom: 10px;">Powered By Modern Tech</h2>
+                <p class="tech-subtitle">Built with the latest tools to ensure speed, accuracy, and reliability.</p>
+                <div class="badges">
+                    <span class="badge-pill"><i class="fa-brands fa-html5"></i> HTML and CSS</span>
+                    <span class="badge-pill"><i class="fa-brands fa-bootstrap"></i> Bootstrap</span>
+                    <span class="badge-pill"><i class="fa-brands fa-python"></i> Python Flask</span>
+                    <span class="badge-pill"><i class="fa-solid fa-brain"></i> AI and ML</span>
+                    <span class="badge-pill">NLTK and SpaCy</span>
+                    <span class="badge-pill">Scikit-learn</span>
+                    <span class="badge-pill"><i class="fa-solid fa-database"></i> SQLite</span>
+                    <span class="badge-pill"><i class="fa-brands fa-google"></i> Gmail API</span>
+                </div>
+            </div>
+        </section>
 
-                                                <p class="text-slate-600 mb-2 font-medium">Step-by-step instructions:</p>
-                                                <ol class="list-decimal pl-4 space-y-1 text-slate-500">
-                                                    <li>Go to your <a href="https://myaccount.google.com/security" target="_blank" class="text-primary-600 hover:underline inline-flex items-center">Google Security <i class="fas fa-external-link-alt ml-1 scale-75"></i></a></li>
-                                                    <li>Select <strong>2-Step Verification</strong></li>
-                                                    <li>Select <strong>App passwords</strong></li>
-                                                    <li>Choose <strong>Mail</strong> and <strong>Other (Custom name)</strong></li>
-                                                    <li>Enter "Resume Analyzer" and click <strong>Generate</strong></li>
-                                                    <li>Copy the 16-digit password and paste it above</li>
-                                                </ol>
+        <section id="resume-analyzer-section" class="resume-analyzer-section">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-shell">
+                        {% for category, message in messages %}
+                            <div class="flash-message {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
 
-                                                <div class="mt-4 flex flex-col gap-2">
-                                                    <div class="bg-blue-50 text-blue-800 p-2 rounded flex items-start">
-                                                        <i class="fas fa-lightbulb mt-0.5 mr-2"></i>
-                                                        <span><strong>Tip:</strong> You can't view it again after closing, but can generate a new one.</span>
+            <div class="form-shell px-4 py-4 sm:py-6 lg:py-8">
+                <div class="analyzer-header">
+                    <h2>Resume Analyzer Dashboard</h2>
+                    <p>Upload job details and candidate resumes below to start AI-powered screening, ranking, and authenticity checks from the same index page.</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('analyze_resumes') }}" enctype="multipart/form-data" id="resumeForm" class="space-y-8">
+                    <div class="grid lg:grid-cols-2 gap-8">
+                        <div class="glass-card flex flex-col">
+                            <div class="section-band">
+                                <h2 class="text-lg font-semibold flex items-center">
+                                    <i class="fas fa-building mr-3"></i>Company Information
+                                </h2>
+                            </div>
+                            <div class="p-6 space-y-4 flex-grow">
+                                <div>
+                                    <label for="company_name" class="block text-sm font-medium text-slate-700 mb-1">Company Name *</label>
+                                    <input type="text" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="company_name" name="company_name" required>
+                                </div>
+                                <div>
+                                    <label for="hr_name" class="block text-sm font-medium text-slate-700 mb-1">HR Manager Name *</label>
+                                    <input type="text" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="hr_name" name="hr_name" required>
+                                </div>
+                                <div>
+                                    <label for="hr_email" class="block text-sm font-medium text-slate-700 mb-1">HR Email *</label>
+                                    <input type="email" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="hr_email" name="hr_email" required>
+                                </div>
+                                <div>
+                                    <label for="email_password" class="block text-sm font-medium text-slate-700 mb-1">Email Password *</label>
+                                    <input type="password" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="email_password" name="email_password" required>
+
+                                    <div class="mt-4">
+                                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 shadow-sm">
+                                            <div class="flex items-center justify-between mb-2 gap-2 flex-wrap">
+                                                <span class="text-xs font-bold text-amber-800 flex items-center">
+                                                    <i class="fas fa-exclamation-triangle mr-2"></i> Important: Gmail users must use App Password
+                                                </span>
+                                                <button type="button" class="text-[10px] px-2 py-1 border border-amber-300 rounded text-amber-700 hover:bg-amber-100 transition-colors" onclick="document.getElementById('appPasswordGuide').classList.toggle('hidden')">
+                                                    <i class="fas fa-info-circle mr-1"></i> How to generate
+                                                </button>
+                                            </div>
+
+                                            <div id="appPasswordGuide" class="hidden mt-3 space-y-4 text-xs">
+                                                <div class="bg-white p-4 rounded-lg border border-amber-100">
+                                                    <h6 class="font-bold mb-2 flex items-center text-amber-900"><i class="fas fa-key mr-2"></i> Gmail Setup Guide</h6>
+                                                    <p class="text-slate-600 mb-2 font-medium">Why App Password is required:</p>
+                                                    <p class="text-slate-500 mb-3 leading-relaxed">Gmail requires App Passwords for third-party applications. Your regular password will not work for SMTP.</p>
+                                                    <p class="text-slate-600 mb-2 font-medium">Step-by-step instructions:</p>
+                                                    <ol class="list-decimal pl-4 space-y-1 text-slate-500">
+                                                        <li>Go to your <a href="https://myaccount.google.com/security" target="_blank" class="text-primary-600 hover:underline inline-flex items-center">Google Security <i class="fas fa-external-link-alt ml-1 scale-75"></i></a></li>
+                                                        <li>Select <strong>2-Step Verification</strong></li>
+                                                        <li>Select <strong>App passwords</strong></li>
+                                                        <li>Choose <strong>Mail</strong> and <strong>Other (Custom name)</strong></li>
+                                                        <li>Enter "Resume Analyzer" and click <strong>Generate</strong></li>
+                                                        <li>Copy the 16-digit password and paste it above</li>
+                                                    </ol>
+                                                    <div class="mt-4 flex flex-col gap-2">
+                                                        <div class="bg-blue-50 text-blue-800 p-2 rounded flex items-start">
+                                                            <i class="fas fa-lightbulb mt-0.5 mr-2"></i>
+                                                            <span><strong>Tip:</strong> You cannot view it again after closing, but you can generate a new one.</span>
+                                                        </div>
+                                                        <a href="https://support.google.com/accounts/answer/185833" target="_blank" class="inline-flex items-center justify-center bg-primary-600 hover:bg-primary-700 text-white px-3 py-1.5 rounded-md font-medium transition-colors">
+                                                            <i class="fas fa-file-alt mr-2"></i> Official Help Article
+                                                        </a>
                                                     </div>
-                                                    <a href="https://support.google.com/accounts/answer/185833" target="_blank" class="inline-flex items-center justify-center bg-primary-600 hover:bg-primary-700 text-white px-3 py-1.5 rounded-md font-medium transition-colors">
-                                                        <i class="fas fa-file-alt mr-2"></i> Official Help Article
-                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -262,178 +677,157 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Job Analysis Settings -->
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
-                        <div class="bg-primary-600 px-6 py-4">
-                            <h2 class="text-white text-lg font-semibold flex items-center">
-                                <i class="fas fa-bullseye mr-3"></i>Job Analysis Settings
-                            </h2>
-                        </div>
-                        <div class="p-6 space-y-4 flex-grow">
-                            <div>
-                                <label for="target_role" class="block text-sm font-medium text-slate-700 mb-1">Target Job Role</label>
-                                <select class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none bg-white" id="target_role" name="target_role">
-                                    <option value="">Auto-detect role from resume</option>
-                                    <optgroup label="IT & Technology Roles">
-                                        <option value="Data Analyst">Data Analyst</option>
-                                        <option value="Software Developer">Software Developer</option>
-                                        <option value="Web Developer">Web Developer</option>
-                                        <option value="Full Stack Developer">Full Stack Developer</option>
-                                        <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
-                                        <option value="Cloud Engineer">Cloud Engineer</option>
-                                        <option value="AI/ML Engineer">AI/ML Engineer</option>
-                                        <option value="DevOps Engineer">DevOps Engineer</option>
-                                        <option value="Mobile Developer">Mobile Developer</option>
-                                        <option value="UI/UX Designer">UI/UX Designer</option>
-                                        <option value="Graphic Designer">Graphic Designer</option>
-                                        <option value="Product Manager">Product Manager</option>
-                                        <option value="Other">Other (Use JD or Custom Requirements)</option>
-                                    </optgroup>
-                                </select>
-                                <p class="mt-1 text-xs text-slate-500">Select "Other" to use skills from JD file or auto-detection</p>
+                        <div class="glass-card flex flex-col">
+                            <div class="section-band">
+                                <h2 class="text-lg font-semibold flex items-center">
+                                    <i class="fas fa-bullseye mr-3"></i>Job Analysis Settings
+                                </h2>
                             </div>
-                            <div>
-                                <label for="hr_requirements" class="block text-sm font-medium text-slate-700 mb-1">Additional Requirements</label>
-                                <textarea class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="hr_requirements" name="hr_requirements" rows="4" placeholder="Enter any specific requirements or preferences..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- JD Upload -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="bg-primary-600 px-6 py-4">
-                        <h2 class="text-white text-lg font-semibold flex items-center">
-                            <i class="fas fa-file-alt mr-3"></i>Upload Job Description (JD) File
-                        </h2>
-                    </div>
-                    <div class="p-6">
-                        <input type="file" class="w-full text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-all cursor-pointer" name="jd_file" accept=".pdf,.txt">
-                        <p class="mt-2 text-xs text-slate-500 italic text-center">Upload JD in .txt or .pdf format (optional, recommended when using "Other" role)</p>
-                    </div>
-                </div>
-
-                <!-- Resume Upload -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="bg-primary-600 px-6 py-4 flex justify-between items-center">
-                        <h2 class="text-white text-lg font-semibold flex items-center">
-                            <i class="fas fa-upload mr-3"></i>Upload Resume Files
-                        </h2>
-                        <span class="text-blue-100 text-xs font-medium">Supported: PDF, DOCX, DOC, TXT</span>
-                    </div>
-                    <div class="p-6">
-                        <div class="relative group">
-                            <div class="file-drop-zone border-2 border-dashed border-primary-300 rounded-2xl p-10 text-center bg-primary-50/30 group-hover:bg-primary-50/50 group-hover:border-primary-400 transition-all cursor-pointer" id="dropZone">
-                                <div class="space-y-4">
-                                    <div class="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mx-auto transition-transform group-hover:scale-110">
-                                        <i class="fas fa-cloud-upload-alt text-2xl"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="text-lg font-bold text-slate-800">Drag & Drop Resume Files Here</h6>
-                                        <p class="text-slate-500">or click to browse from your computer</p>
-                                    </div>
-                                    <input type="file" class="hidden" id="resume_files" name="resume_files" multiple accept=".pdf,.docx,.doc,.txt" required>
-                                    <button type="button" class="inline-flex items-center px-6 py-2 bg-primary-600 text-white rounded-full font-semibold hover:bg-primary-700 transition-all transform hover:-translate-y-px active:translate-y-0" onclick="document.getElementById('resume_files').click()">
-                                        <i class="fas fa-folder-open mr-2"></i>Browse Files
-                                    </button>
+                            <div class="p-6 space-y-4 flex-grow">
+                                <div>
+                                    <label for="target_role" class="block text-sm font-medium text-slate-700 mb-1">Target Job Role</label>
+                                    <select class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none bg-white" id="target_role" name="target_role">
+                                        <option value="">Auto-detect role from resume</option>
+                                        <optgroup label="IT and Technology Roles">
+                                            <option value="Data Analyst">Data Analyst</option>
+                                            <option value="Software Developer">Software Developer</option>
+                                            <option value="Web Developer">Web Developer</option>
+                                            <option value="Full Stack Developer">Full Stack Developer</option>
+                                            <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
+                                            <option value="Cloud Engineer">Cloud Engineer</option>
+                                            <option value="AI/ML Engineer">AI/ML Engineer</option>
+                                            <option value="DevOps Engineer">DevOps Engineer</option>
+                                            <option value="Mobile Developer">Mobile Developer</option>
+                                            <option value="UI/UX Designer">UI/UX Designer</option>
+                                            <option value="Graphic Designer">Graphic Designer</option>
+                                            <option value="Product Manager">Product Manager</option>
+                                            <option value="Other">Other (Use JD or Custom Requirements)</option>
+                                        </optgroup>
+                                    </select>
+                                    <p class="mt-1 text-xs text-slate-500">Select Other to use skills from the JD file or auto-detection.</p>
+                                </div>
+                                <div>
+                                    <label for="hr_requirements" class="block text-sm font-medium text-slate-700 mb-1">Additional Requirements</label>
+                                    <textarea class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none" id="hr_requirements" name="hr_requirements" rows="4" placeholder="Enter any specific requirements or preferences..."></textarea>
                                 </div>
                             </div>
                         </div>
-                        <div id="fileList" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-2"></div>
                     </div>
-                </div>
 
-                <div class="text-center pb-8">
-                    <button type="submit" class="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white transition-all duration-200 bg-primary-600 font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 shadow-xl hover:shadow-primary-300/50 hover:bg-primary-700" id="submitBtn">
-                        <i class="fas fa-cogs mr-2 group-hover:rotate-180 transition-transform duration-500"></i>
-                        Analyze Resumes
-                    </button>
-                </div>
-            </form>
-        </div>
+                    <div class="glass-card">
+                        <div class="section-band">
+                            <h2 class="text-lg font-semibold flex items-center">
+                                <i class="fas fa-file-alt mr-3"></i>Upload Job Description File
+                            </h2>
+                        </div>
+                        <div class="p-6">
+                            <input type="file" class="w-full text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-all cursor-pointer" name="jd_file" accept=".pdf,.txt">
+                            <p class="mt-2 text-xs text-slate-500 italic text-center">Upload the JD in .txt or .pdf format. This is optional but recommended when using Other role.</p>
+                        </div>
+                    </div>
 
-        <!-- Features Grid -->
-        <section class="upload-page-shell px-4 py-12 sm:py-16">
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow text-center">
-                    <div class="w-16 h-16 bg-blue-50 text-primary-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-search-plus text-2xl"></i>
+                    <div class="glass-card">
+                        <div class="section-band flex justify-between items-center gap-3 flex-wrap">
+                            <h2 class="text-lg font-semibold flex items-center">
+                                <i class="fas fa-upload mr-3"></i>Upload Resume Files
+                            </h2>
+                            <span class="text-blue-100 text-xs font-medium">Supported: PDF, DOCX, DOC, TXT</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="relative group">
+                                <div class="file-drop-zone border-2 border-dashed border-primary-300 rounded-2xl p-10 text-center bg-primary-50/30 group-hover:bg-primary-50/50 group-hover:border-primary-400 transition-all cursor-pointer" id="dropZone">
+                                    <div class="space-y-4">
+                                        <div class="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mx-auto transition-transform group-hover:scale-110">
+                                            <i class="fas fa-cloud-upload-alt text-2xl"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="text-lg font-bold text-slate-800">Drag and Drop Resume Files Here</h6>
+                                            <p class="text-slate-500">or click to browse from your computer</p>
+                                        </div>
+                                        <input type="file" class="hidden" id="resume_files" name="resume_files" multiple accept=".pdf,.docx,.doc,.txt" required>
+                                        <button type="button" class="inline-flex items-center px-6 py-2 bg-primary-600 text-white rounded-full font-semibold hover:bg-primary-700 transition-all transform hover:-translate-y-px active:translate-y-0" onclick="document.getElementById('resume_files').click()">
+                                            <i class="fas fa-folder-open mr-2"></i>Browse Files
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="fileList" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-2"></div>
+                        </div>
                     </div>
-                    <h5 class="text-xl font-bold text-slate-900 mb-3">Smart Analysis</h5>
-                    <p class="text-slate-500 leading-relaxed">AI-powered resume parsing and skill extraction with job role matching</p>
-                </div>
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow text-center">
-                    <div class="w-16 h-16 bg-blue-50 text-primary-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-chart-bar text-2xl"></i>
+
+                    <div class="text-center pb-8">
+                        <button type="submit" class="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white transition-all duration-200 bg-primary-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 shadow-xl hover:shadow-primary-300/50 hover:bg-primary-700" id="submitBtn">
+                            <i class="fas fa-cogs mr-2 group-hover:rotate-180 transition-transform duration-500"></i>
+                            Analyze Resumes
+                        </button>
                     </div>
-                    <h5 class="text-xl font-bold text-slate-900 mb-3">Intelligent Scoring</h5>
-                    <p class="text-slate-500 leading-relaxed">Automated candidate scoring and ranking based on job requirements</p>
-                </div>
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow text-center">
-                    <div class="w-16 h-16 bg-blue-50 text-primary-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-robot text-2xl"></i>
-                    </div>
-                    <h5 class="text-xl font-bold text-slate-900 mb-3">AI Detection</h5>
-                    <p class="text-slate-500 leading-relaxed">Detect AI-generated resume content to ensure authenticity</p>
-                </div>
+                </form>
             </div>
         </section>
     </main>
 
-    <footer class="bg-slate-900 text-slate-400 py-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>&copy; 2026 Resume Checker for HR Recruiters. All rights reserved.</p>
-        </div>
+    <footer class="landing-footer">
+        <h2 style="margin-bottom: 10px; font-size: 1.75rem; font-weight: 700;">SmartHire.AI</h2>
+        <p>&copy; 2026 SmartHire.AI | Built with love by Sagar</p>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
-        // Drag and Drop Functionality
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('resume_files');
         const fileList = document.getElementById('fileList');
+        const dashboardLinks = document.querySelectorAll('a[href="#resume-analyzer-section"]');
 
-        dropZone.addEventListener('click', (e) => {
-            if (e.target.tagName !== 'BUTTON' && e.target.closest('button') === null) {
-                fileInput.click();
-            }
+        dashboardLinks.forEach((link) => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                document.getElementById('resume-analyzer-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
         });
 
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
+        if (dropZone && fileInput && fileList) {
+            dropZone.addEventListener('click', (event) => {
+                if (event.target.tagName !== 'BUTTON' && event.target.closest('button') === null) {
+                    fileInput.click();
+                }
+            });
 
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
-        });
+            dropZone.addEventListener('dragover', (event) => {
+                event.preventDefault();
+                dropZone.classList.add('dragover');
+            });
 
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                const dt = new DataTransfer();
-                // Add existing files
-                Array.from(fileInput.files).forEach(f => dt.items.add(f));
-                // Add new files
-                Array.from(files).forEach(f => dt.items.add(f));
-                fileInput.files = dt.files;
-                displayFiles(fileInput.files);
-            }
-        });
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
 
-        fileInput.addEventListener('change', (e) => {
-            displayFiles(e.target.files);
-        });
+            dropZone.addEventListener('drop', (event) => {
+                event.preventDefault();
+                dropZone.classList.remove('dragover');
+                const files = event.dataTransfer.files;
+                if (files.length > 0) {
+                    const dataTransfer = new DataTransfer();
+                    Array.from(fileInput.files).forEach((file) => dataTransfer.items.add(file));
+                    Array.from(files).forEach((file) => dataTransfer.items.add(file));
+                    fileInput.files = dataTransfer.files;
+                    displayFiles(fileInput.files);
+                }
+            });
+
+            fileInput.addEventListener('change', (event) => {
+                displayFiles(event.target.files);
+            });
+        }
 
         function displayFiles(files) {
+            if (!fileList) {
+                return;
+            }
+
             fileList.innerHTML = '';
             Array.from(files).forEach((file, index) => {
                 const fileItem = document.createElement('div');
-                fileItem.className = 'flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-xl hover:bg-white hover:shadow-sm transition-all animate-in fade-in slide-in-from-left-2 duration-300';
+                fileItem.className = 'flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-xl hover:bg-white hover:shadow-sm transition-all';
                 fileItem.innerHTML = `
                     <div class="flex items-center space-x-3 overflow-hidden">
                         <div class="w-8 h-8 flex-shrink-0 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
@@ -453,27 +847,31 @@
         }
 
         function removeFile(index) {
-            const dt = new DataTransfer();
+            const dataTransfer = new DataTransfer();
             const files = fileInput.files;
-            for (let i = 0; i < files.length; i++) {
-                if (i !== index) dt.items.add(files[i]);
+            for (let fileIndex = 0; fileIndex < files.length; fileIndex += 1) {
+                if (fileIndex !== index) {
+                    dataTransfer.items.add(files[fileIndex]);
+                }
             }
-            fileInput.files = dt.files;
+            fileInput.files = dataTransfer.files;
             displayFiles(fileInput.files);
         }
 
-        // Form Submit Loading Animation
-        document.getElementById('resumeForm').addEventListener('submit', function() {
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `
-                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Analyzing...
-            `;
-        });
+        const resumeForm = document.getElementById('resumeForm');
+        if (resumeForm) {
+            resumeForm.addEventListener('submit', () => {
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Analyzing...
+                `;
+            });
+        }
     </script>
 </body>
 </html>
